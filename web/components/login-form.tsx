@@ -5,10 +5,16 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Link } from '@/i18n/navigation';
 import { useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
-import { ROUTES, ERROR_MESSAGES } from '@/lib/constants';
+import {
+  ROUTES,
+  ERROR_MESSAGES,
+  REMEMBER_ME_COOKIE,
+  REMEMBER_ME_MAX_AGE,
+} from '@/lib/constants';
 import { LogIn, Eye, EyeOff } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -23,6 +29,7 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -32,6 +39,12 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
     setError(null);
 
     try {
+      // Persist/clear the remember-me marker before signing in; the cookie
+      // adapters use it to scope auth cookies (30 days vs session-only).
+      document.cookie = rememberMe
+        ? `${REMEMBER_ME_COOKIE}=1; Path=/; SameSite=Lax; Max-Age=${REMEMBER_ME_MAX_AGE}`
+        : `${REMEMBER_ME_COOKIE}=; Path=/; SameSite=Lax; Max-Age=0`;
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -111,6 +124,19 @@ export function LoginForm({ className, redirectTo, ...props }: LoginFormProps) {
                 )}
               </button>
             </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="remember-me"
+              checked={rememberMe}
+              onCheckedChange={checked => setRememberMe(checked === true)}
+            />
+            <Label
+              htmlFor="remember-me"
+              className="text-sm font-normal text-gray-600 dark:text-gray-400 cursor-pointer"
+            >
+              {t('rememberMe')}
+            </Label>
           </div>
           {error && <p className="form-error">{error}</p>}
           <Button

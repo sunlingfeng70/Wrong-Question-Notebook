@@ -786,6 +786,11 @@ export const COOKIE_CONSENT_CONSTANTS = {
   MAX_AGE_SECONDS: 182 * 24 * 60 * 60, // ~6 months
 } as const;
 
+// "Remember me" login persistence. Marker cookie controls whether auth
+// cookies are written as long-lived (30 days) or session-only.
+export const REMEMBER_ME_COOKIE = 'wqn-remember';
+export const REMEMBER_ME_MAX_AGE = 30 * 24 * 60 * 60; // 30 days (seconds)
+
 // Helper: Get icon component with runtime validation and fallback
 export function getIconComponent(iconName: string): LucideIcon {
   // Type guard to check if iconName is a valid SubjectIcon

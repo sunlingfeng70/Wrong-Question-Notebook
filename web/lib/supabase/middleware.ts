@@ -2,7 +2,13 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { hasEnvVars } from '../server-utils';
 import { updateLastLoginEdge } from '../edge-utils';
-import { ENV_VARS, USER_ROLES, ROUTES } from '../constants';
+import {
+  ENV_VARS,
+  USER_ROLES,
+  ROUTES,
+  REMEMBER_ME_COOKIE,
+  REMEMBER_ME_MAX_AGE,
+} from '../constants';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -14,6 +20,8 @@ export async function updateSession(request: NextRequest) {
   if (!hasEnvVars) {
     return supabaseResponse;
   }
+
+  const remembered = request.cookies.get(REMEMBER_ME_COOKIE)?.value === '1';
 
   // With Fluid compute, don't put this client in a global environment
   // variable. Always create a new one on each request.
@@ -32,9 +40,20 @@ export async function updateSession(request: NextRequest) {
           supabaseResponse = NextResponse.next({
             request,
           });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+          cookiesToSet.forEach(({ name, value, options }) => {
+            // Keep removals as removals; otherwise honour the remember-me
+            // marker (absent marker -> session cookie)
+            const maxAge =
+              options.maxAge === 0
+                ? 0
+                : remembered
+                  ? REMEMBER_ME_MAX_AGE
+                  : undefined;
+            const cookieOptions = { ...options };
+            if (maxAge === undefined) delete cookieOptions.maxAge;
+            else cookieOptions.maxAge = maxAge;
+            supabaseResponse.cookies.set(name, value, cookieOptions);
+          });
         },
       },
     }
