@@ -154,3 +154,4 @@ vite.config.ts.timestamp-*
 
 # Solomd editor session files
 .solomd/
+.env*
