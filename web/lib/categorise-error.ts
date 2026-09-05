@@ -1,31 +1,10 @@
-import { GoogleGenAI } from '@google/genai';
-import { ERROR_CATEGORY_VALUES, USAGE_QUOTA_CONSTANTS } from '@/lib/constants';
+import { completeLLM, isLLMConfigured } from '@/lib/llm';
+import { USAGE_QUOTA_CONSTANTS } from '@/lib/constants';
 import { createServiceClient } from '@/lib/supabase-utils';
 import { normaliseTopicLabel } from '@/lib/insights-utils';
 import { checkAndIncrementQuota } from '@/lib/usage-quota';
 import { getUserTimezone } from '@/lib/timezone-utils';
 import type { AnswerConfig } from '@/lib/types';
-
-const RESPONSE_SCHEMA = {
-  type: 'object' as const,
-  properties: {
-    broad_category: {
-      type: 'string' as const,
-      enum: [...ERROR_CATEGORY_VALUES],
-    },
-    granular_tag: { type: 'string' as const },
-    topic_label: { type: 'string' as const },
-    confidence: { type: 'number' as const },
-    reasoning: { type: 'string' as const },
-  },
-  required: [
-    'broad_category',
-    'granular_tag',
-    'topic_label',
-    'confidence',
-    'reasoning',
-  ] as const,
-};
 
 function buildSystemPrompt(
   problem: {
@@ -160,8 +139,7 @@ export interface CategoriseErrorResult {
 export async function performErrorCategorisation(
   params: CategoriseErrorParams
 ): Promise<CategoriseErrorResult> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
+  if (!isLLMConfigured()) {
     throw new Error('AI categorisation service not configured');
   }
 
@@ -277,27 +255,11 @@ export async function performErrorCategorisation(
     existingLabels
   );
 
-  const genai = new GoogleGenAI({ apiKey });
-
-  const response = await genai.models.generateContent({
-    model: 'gemini-2.5-flash',
-    contents: [
-      {
-        role: 'user',
-        parts: [{ text: userPrompt }],
-      },
-    ],
-    config: {
-      systemInstruction: systemPrompt,
-      responseMimeType: 'application/json',
-      responseSchema: RESPONSE_SCHEMA,
-    },
+  const text = await completeLLM({
+    system: systemPrompt,
+    user: userPrompt,
+    json: true,
   });
-
-  const text = response.text;
-  if (!text) {
-    throw new Error('AI returned empty response');
-  }
 
   const result = JSON.parse(text);
 

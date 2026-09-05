@@ -31,6 +31,31 @@ const RichTextDisplay = React.memo(function RichTextDisplay({
     return content ? sanitizeHtmlContent(content) : '';
   }, [content]);
 
+  // Convert plain-text `$...$` math (AI-extracted content) into data-latex
+  // spans so the KaTeX pipeline renders it. Editor content already stores
+  // math as data-latex elements, so only plain text is touched.
+  const processedContent = useMemo(() => {
+    if (!sanitizedContent) return '';
+    const isPlainText = !/<[a-z][^>]*>/i.test(sanitizedContent);
+    if (!isPlainText) return sanitizedContent;
+    const esc = (latex: string) =>
+      latex
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    return sanitizedContent
+      .replace(
+        /\$\$([^$\n]+)\$\$/g,
+        (_, latex: string) =>
+          `<span data-latex="${esc(latex)}" data-type="block-math"></span>`
+      )
+      .replace(
+        /\$([^$\n]+)\$/g,
+        (_, latex: string) => `<span data-latex="${esc(latex)}"></span>`
+      );
+  }, [sanitizedContent]);
+
   // Process math elements - this function handles the actual math rendering
   const processMathElements = useCallback(() => {
     if (!containerRef.current || hasProcessedMath.current) return;
@@ -92,8 +117,8 @@ const RichTextDisplay = React.memo(function RichTextDisplay({
     cleanup();
 
     // Reset the processed flag when content changes
-    if (lastProcessedContent.current !== sanitizedContent) {
-      lastProcessedContent.current = sanitizedContent;
+    if (lastProcessedContent.current !== processedContent) {
+      lastProcessedContent.current = processedContent;
       hasProcessedMath.current = false;
     }
 
@@ -103,7 +128,7 @@ const RichTextDisplay = React.memo(function RichTextDisplay({
     }, 0);
 
     return cleanup;
-  }, [sanitizedContent, processMathElements, cleanup]);
+  }, [processedContent, processMathElements, cleanup]);
 
   // Handle visibility changes - process math when component becomes visible
   useEffect(() => {
@@ -145,7 +170,7 @@ const RichTextDisplay = React.memo(function RichTextDisplay({
     <div
       ref={containerRef}
       className={cn('rich-text-content', className)}
-      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+      dangerouslySetInnerHTML={{ __html: processedContent }}
     />
   );
 });

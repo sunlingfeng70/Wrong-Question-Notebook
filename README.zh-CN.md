@@ -62,7 +62,7 @@ Wrong Question Notebook（WQN）是一个 Web 应用，旨在帮助学生系统�
 
 ### 使用AI提取题目
 
-- 使用 **Google Gemini 2.5 Flash** 从图片中提取题目
+- 使用 **豆包（火山方舟）视觉 LLM** 从图片中提取题目
 - 具有每日使用配额，并支持管理员为用户单独调整额度
 - 支持自动识别题目类型、选项和正确答案
 
@@ -72,7 +72,7 @@ Wrong Question Notebook（WQN）是一个 Web 应用，旨在帮助学生系统�
 
 ### 身份验证与安全
 
-- 基于邮箱的注册与登录，集成 **Cloudflare Turnstile** CAPTCHA
+- 基于邮箱的注册与登录
 - 带邮箱确认的密码重置流程
 - 安全响应头（HSTS、CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、Permissions-Policy）
 - HTML 内容清洗（DOMPurify + sanitize-html），并支持数学内容
@@ -95,8 +95,7 @@ Wrong Question Notebook（WQN）是一个 Web 应用，旨在帮助学生系统�
 | 富文本       | TipTap（数学、表格、图片、链接、排版）   |
 | 数学渲染     | KaTeX                                    |
 | 认证与数据库 | Supabase（PostgreSQL、Auth、Storage）    |
-| AI           | Google Gemini 2.5 Flash（@google/genai） |
-| CAPTCHA      | Cloudflare Turnstile                     |
+| AI           | 豆包 Seed（火山方舟，OpenAI 兼容）        |
 | 图表         | Chart.js + react-chartjs-2               |
 | 数据表格     | TanStack Table                           |
 | 校验         | Zod                                      |
@@ -112,8 +111,7 @@ Wrong Question Notebook（WQN）是一个 Web 应用，旨在帮助学生系统�
 
 - Node.js 18+
 - 一个 [Supabase](https://supabase.com) 项目
-- （可选）用于 AI 题目提取的 [Gemini API key](https://aistudio.google.com/)
-- （可选）[Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) site key
+- （可选）用于 AI 功能的 [火山方舟 API key](https://console.volcengine.com/ark/)
 
 ### 安装
 
@@ -137,7 +135,8 @@ cp env.example .env.local
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Supabase anon / public key              | 是   |
 | `SUPABASE_SERVICE_ROLE_KEY`                    | Supabase service role key（服务端使用） | 是   |
 | `SITE_URL`                                     | 已部署站点的 URL（用于 sitemap）        | 否   |
-| `GEMINI_API_KEY`                               | Google Gemini API key（用于 AI 提取）   | 否   |
+| `VOLC_ARK_API_KEY`                             | 火山方舟 API key（用于 AI 功能）       | 否   |
+| `VOLC_ARK_BASE_URL` / `LLM_MODEL`          | 方舟端点 / 模型覆盖（默认豆包）        | 否   |
 
 ### 开发
 
@@ -192,7 +191,7 @@ web/
   lib/                # 工具函数、Supabase 客户端、schema、类型、常量
   messages/           # 多语言文案包（en、zh-CN）
   public/             # 静态资源（W_logo.svg、robots.txt）
-  middleware.ts       # Supabase 会话刷新
+  proxy.ts            # 中间件：Supabase 会话刷新 + i18n 路由
 ```
 
 ## 部署

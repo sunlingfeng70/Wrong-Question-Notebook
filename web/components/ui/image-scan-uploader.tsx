@@ -761,7 +761,7 @@ export function ImageScanUploader({
 
   // ── Result state ──
   if (state === 'result' && extractionResult) {
-    const { confidence } = extractionResult;
+    const confidence = extractionResult.confidence ?? {};
     const warnings = confidence.warnings || [];
 
     const problemTypeLabel =

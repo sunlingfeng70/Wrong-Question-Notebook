@@ -30,7 +30,7 @@ The Wrong Question Notebook (WQN) is a web application designed to help students
 - Create and manage tags within notebooks
 - Tag problems with multiple tags for flexible categorisation
 - Filter problems by tags
-- Global tag overview across all notebooks
+- Per-notebook tag management (create, rename, delete)
 
 ### Problem Sets & Review Sessions
 
@@ -62,7 +62,7 @@ The Wrong Question Notebook (WQN) is a web application designed to help students
 
 ### AI Problem Extraction
 
-- Extract problems from images using **Google Gemini 2.5 Flash**
+- Extract problems from images using **Doubao (Volcengine Ark) vision LLM**
 - Daily usage quota with per-user admin overrides
 - Supports auto-detection of problem type, choices, and correct answers
 
@@ -72,7 +72,7 @@ The Wrong Question Notebook (WQN) is a web application designed to help students
 
 ### Authentication & Security
 
-- Email-based signup and login with **Cloudflare Turnstile** CAPTCHA
+- Email-based signup and login
 - Password reset flow with email confirmation
 - Security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)
 - HTML sanitisation (DOMPurify + sanitize-html) with math content support
@@ -95,8 +95,7 @@ The Wrong Question Notebook (WQN) is a web application designed to help students
 | Rich text      | TipTap (math, tables, images, links, typography) |
 | Math rendering | KaTeX                                            |
 | Auth & DB      | Supabase (PostgreSQL, Auth, Storage)             |
-| AI             | Google Gemini 2.5 Flash (@google/genai)          |
-| CAPTCHA        | Cloudflare Turnstile                             |
+| AI             | Doubao Seed (Volcengine Ark, OpenAI-compatible)   |
 | Charts         | Chart.js + react-chartjs-2                       |
 | Data tables    | TanStack Table                                   |
 | Validation     | Zod                                              |
@@ -112,8 +111,7 @@ The Wrong Question Notebook (WQN) is a web application designed to help students
 
 - Node.js 18+
 - A [Supabase](https://supabase.com) project
-- (Optional) A [Gemini API key](https://aistudio.google.com/) for AI problem extraction
-- (Optional) A [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) site key
+- (Optional) A [Volcengine Ark API key](https://console.volcengine.com/ark/) for AI problem extraction
 
 ### Installation
 
@@ -137,7 +135,8 @@ cp env.example .env.local
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Supabase anon / public key                | Yes      |
 | `SUPABASE_SERVICE_ROLE_KEY`                    | Supabase service role key (server-side)   | Yes      |
 | `SITE_URL`                                     | Deployed site URL (for sitemap)           | No       |
-| `GEMINI_API_KEY`                               | Google Gemini API key (for AI extraction) | No       |
+| `VOLC_ARK_API_KEY`                             | Volcengine Ark API key (for AI features)  | No       |
+| `VOLC_ARK_BASE_URL` / `LLM_MODEL`          | Ark endpoint / model override (default Doubao) | No |
 
 ### Development
 
@@ -192,7 +191,7 @@ web/
   lib/                # Utilities, Supabase clients, schemas, types, constants
   messages/           # i18n message bundles (en, zh-CN)
   public/             # Static assets (W_logo.svg, robots.txt)
-  middleware.ts       # Supabase session refresh
+  proxy.ts            # Middleware: Supabase session refresh + i18n routing
 ```
 
 ## Deployment

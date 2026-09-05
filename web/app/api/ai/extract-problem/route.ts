@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { GoogleGenAI } from '@google/genai';
+import { completeLLM, isLLMConfigured } from '@/lib/llm';
 import { requireUser, unauthorised } from '@/lib/supabase/requireUser';
 import { withSecurity } from '@/lib/security-middleware';
 import {
@@ -125,96 +125,11 @@ The user has no existing tags for this subject yet.
   return prompt;
 }
 
-const RESPONSE_SCHEMA = {
-  type: 'object' as const,
-  properties: {
-    problem_type: {
-      type: 'string' as const,
-      enum: ['mcq', 'short', 'extended'],
-    },
-    title: { type: 'string' as const },
-    content: { type: 'string' as const },
-    mcq_choices: {
-      type: 'array' as const,
-      items: {
-        type: 'object' as const,
-        properties: {
-          id: { type: 'string' as const },
-          text: { type: 'string' as const },
-        },
-        required: ['id', 'text'] as const,
-      },
-    },
-    answer_hint: {
-      type: 'object' as const,
-      nullable: true,
-      properties: {
-        mcq_correct_choice_id: { type: 'string' as const, nullable: true },
-        short_answer_value: { type: 'string' as const, nullable: true },
-        short_answer_is_numeric: { type: 'boolean' as const, nullable: true },
-        extended_working: { type: 'string' as const, nullable: true },
-        answer_confidence: {
-          type: 'string' as const,
-          enum: ['high', 'medium', 'low'],
-        },
-      },
-      required: ['answer_confidence'] as const,
-    },
-    suggest_image_asset: { type: 'boolean' as const },
-    suggested_tags: {
-      type: 'object' as const,
-      properties: {
-        existing_tag_ids: {
-          type: 'array' as const,
-          items: { type: 'string' as const },
-        },
-        new_tag_names: {
-          type: 'array' as const,
-          items: { type: 'string' as const },
-        },
-      },
-      required: ['existing_tag_ids', 'new_tag_names'] as const,
-    },
-    confidence: {
-      type: 'object' as const,
-      properties: {
-        problem_type_confidence: {
-          type: 'string' as const,
-          enum: ['high', 'medium', 'low'],
-        },
-        content_quality: {
-          type: 'string' as const,
-          enum: ['clear', 'partially_unclear', 'unclear'],
-        },
-        has_math: { type: 'boolean' as const },
-        warnings: {
-          type: 'array' as const,
-          items: { type: 'string' as const },
-        },
-      },
-      required: [
-        'problem_type_confidence',
-        'content_quality',
-        'has_math',
-      ] as const,
-    },
-  },
-  required: [
-    'problem_type',
-    'title',
-    'content',
-    'suggest_image_asset',
-    'suggested_tags',
-    'confidence',
-  ] as const,
-};
-
 async function extractProblem(req: Request) {
   const { user, supabase } = await requireUser();
   if (!user) return unauthorised();
 
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
+  if (!isLLMConfigured()) {
     return NextResponse.json(
       createApiErrorResponse('AI extraction service not configured', 500),
       { status: 500 }
@@ -293,40 +208,13 @@ async function extractProblem(req: Request) {
   }
 
   try {
-    const genai = new GoogleGenAI({ apiKey });
-
-    const response = await genai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            {
-              inlineData: {
-                mimeType,
-                data: image,
-              },
-            },
-            {
-              text: 'Extract the problem from this image. Follow the system instructions carefully.',
-            },
-          ],
-        },
-      ],
-      config: {
-        systemInstruction: buildSystemPrompt(existingTags),
-        responseMimeType: 'application/json',
-        responseSchema: RESPONSE_SCHEMA,
-      },
+    const text = await completeLLM({
+      system: buildSystemPrompt(existingTags),
+      user: 'Extract the problem from this image. Follow the system instructions carefully.',
+      image: { mimeType, base64: image },
+      json: true,
+      maxTokens: 4096,
     });
-
-    const text = response.text;
-    if (!text) {
-      return NextResponse.json(
-        createApiErrorResponse('AI returned empty response', 500),
-        { status: 500 }
-      );
-    }
 
     const extraction = JSON.parse(text);
 
@@ -383,6 +271,33 @@ async function extractProblem(req: Request) {
     }
 
     extraction.suggested_tags = suggestedTags;
+
+    // Normalise model output: some LLMs (e.g. Doubao) flatten the nested
+    // confidence / answer_hint objects into top-level fields. Rebuild the
+    // nested shape the UI and the answer_hint post-processing expect.
+    if (!extraction.confidence) {
+      extraction.confidence = {
+        problem_type_confidence: extraction.problem_type_confidence ?? 'medium',
+        content_quality: extraction.content_quality ?? 'clear',
+        has_math: extraction.has_math ?? false,
+        warnings: extraction.warnings ?? [],
+      };
+    }
+    if (
+      !extraction.answer_hint &&
+      (extraction.mcq_correct_choice_id !== undefined ||
+        extraction.short_answer_value !== undefined ||
+        extraction.extended_working !== undefined ||
+        extraction.answer_confidence !== undefined)
+    ) {
+      extraction.answer_hint = {
+        mcq_correct_choice_id: extraction.mcq_correct_choice_id ?? null,
+        short_answer_value: extraction.short_answer_value ?? null,
+        short_answer_is_numeric: extraction.short_answer_is_numeric ?? null,
+        extended_working: extraction.extended_working ?? null,
+        answer_confidence: extraction.answer_confidence ?? 'medium',
+      };
+    }
 
     // Post-process answer_hint: validate consistency and apply confidence gating
     if (extraction.answer_hint) {
