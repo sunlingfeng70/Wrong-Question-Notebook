@@ -1,269 +1,268 @@
-# Changelog
+# 更新日志
 
-All notable changes to this project will be documented in this file.
+本文件记录该项目所有值得注意的变更。
 
-The format is based on [Keep a Changelog],
-and this project adheres to [Semantic Versioning].
+格式基于 [Keep a Changelog]，本项目遵循 [Semantic Versioning]。
 
 ## [Unreleased]
 
-### Added
+### 新增
 
-- **Social & Discovery for Problem Sets**: Full social engagement layer for public problem sets
-  - View count tracking with 15-minute dedup window (IP-based for anonymous, user-based for authenticated)
-  - Like/unlike toggle with optimistic UI and animated heart icon
-  - Favourite/bookmark with private per-user storage (tab on Problem Sets page)
-  - Copy count tracking on shared sets
-  - Social actions bar on public set detail pages (views, likes, copies, favourite, share, report)
-  - Report/flag mechanism for inappropriate content (admin-only moderation initially)
+- **题集社交与发现**：公开题集的完整社交互动层
+  - 浏览量统计，带 15 分钟去重窗口（匿名用户按 IP，登录用户按用户）
+  - 点赞/取消点赞切换，带乐观 UI 与心形图标动画
+  - 收藏/书签，按用户私密存储（题集页面上的 Tab）
+  - 共享题集的复制量统计
+  - 公开题集详情页的社交操作栏（浏览量、点赞、复制、收藏、分享、举报）
+  - 不当内容举报/标记机制（初期仅管理员审核）
 
-- **In-App Discovery Page** (`/discover`): Browse and search listed public problem sets
-  - Ranking algorithm (quality-biased: copies×5, likes×3, views×0.5 with 30-day time decay)
-  - Full-text search using PostgreSQL tsvector with weighted columns (name=A, description=B)
-  - Subject filter chips and sort options (Trending, Newest, Most Liked, Most Copied)
-  - Cursor-based pagination with infinite scroll
-  - Responsive card grid (1→2→3 columns)
-  - Added "Discover" link to main navigation (Globe icon, purple accent)
+- **应用内发现页**（`/discover`）：浏览与搜索已上架的公开题集
+  - 排序算法（质量加权：复制×5、点赞×3、浏览量×0.5，带 30 天时间衰减）
+  - 使用 PostgreSQL tsvector 的全文搜索，加权列（名称=A、描述=B）
+  - 科目筛选标签与排序选项（Trending、Newest、Most Liked、Most Copied）
+  - 基于游标的分页与无限滚动
+  - 响应式卡片网格（1→2→3 列）
+  - 主导航新增「Discover」链接（Globe 图标、紫色强调）
 
-- **Creator Profiles** (`/creators/[username]`): Public pages for content creators
-  - Profile header with avatar, display name, bio, and aggregate engagement stats
-  - Grid of listed public problem sets using DiscoveryCard component
-  - SEO metadata with OpenGraph tags
+- **创作者主页**（`/creators/[username]`）：内容创作者的公开页面
+  - 主页头部包含头像、显示名、简介与汇总互动统计
+  - 使用 DiscoveryCard 组件展示已上架公开题集的网格
+  - 带 OpenGraph 标签的 SEO 元数据
 
-- **Listed vs Unlisted Public Sets**: New `is_listed` toggle in problem set edit dialog
-  - Public sets default to listed (opt-out model)
-  - "Show in Discovery" toggle visible when sharing level is public
-  - Username required to list sets in discovery
+- **已上架与未上架公开题集**：题集编辑对话框中新增 `is_listed` 切换
+  - 公开题集默认为已上架（选择退出模型）
+  - 分享级别为公开时显示「Show in Discovery」切换
+  - 在发现页上架题集需要用户名
 
-- **SEO Improvements**
-  - Dynamic sitemap (`app/sitemap.ts`) replacing static `next-sitemap`, including all listed public sets and creator profiles
-  - OpenGraph and Twitter Card metadata on public problem set detail pages
-  - Canonical URLs on public pages
+- **SEO 改进**
+  - 动态 sitemap（`app/sitemap.ts`）取代静态 `next-sitemap`，涵盖所有已上架公开题集与创作者主页
+  - 公开题集详情页上的 OpenGraph 与 Twitter Card 元数据
+  - 公开页面的规范 URL
 
-- **AI Answer Extraction**: The image extraction feature now detects visible answers (circled MCQ choices, written short answers, worked solutions) and pre-fills them as editable suggestions in the problem form
-  - MCQ: pre-selects the correct choice if visually marked
-  - Short answer: populates text or numeric answer config
-  - Extended: transcribes working out into the solution editor with math support
-  - Answers are always suggestions — user must review before saving
-  - Low-confidence MCQ/short answers are automatically filtered out
+- **AI 答案提取**：图片提取功能现在能检测可见答案（圈选的选择题选项、手写简答、演算过程），并将其作为可编辑建议预填入题目表单
+  - 选择题：若选项被视觉标记则预选正确选项
+  - 简答题：填充文本或数值答案配置
+  - 问答题：将演算过程转写到带数学支持的解答编辑器中
+  - 答案始终只是建议——用户必须在保存前审阅
+  - 低置信度的选择题/简答题答案会被自动过滤
 
-- **UI/UX polish pass**: Accessibility improvements (skip-to-content link, ARIA labels, warm focus rings, password visibility toggles), nav active state indicator, page transition animations, richer toast notifications, improved statistics empty states, mobile-friendly comparison table, interactive card hover effects, and an expanded footer
+- **UI/UX 打磨**：无障碍改进（跳转到内容的链接、ARIA 标签、暖色焦点环、密码可见性切换）、导航激活状态指示器、页面切换动画、更丰富的 toast 通知、改进的统计空状态、移动端友好的对比表格、交互式卡片悬停效果，以及扩展的页脚
 
-### Changed
+### 变更
 
-- **i18n key refactor**: Dissolved the 250-key `CommonUtils` junk-drawer namespace into purpose-specific namespaces (`Editor`, `FileManager`, `CopyDialog`, `Problems`, `Statistics`, `DataTable`, `Subjects`, `ProblemSets`, `Common`), removed 100+ cross-namespace duplicate keys, and added compile-time type safety via next-intl `AppConfig` augmentation
-- **AI Extraction math formatting**: Multi-line equations now use a single KaTeX `aligned` block instead of multiple separate display math blocks, producing cleaner rendering
-- **AI Extraction classification**: Problems with visible multi-step working are now consistently classified as "extended" instead of sometimes "short", even when the final answer is a number
+- **i18n 密钥重构**：将含 250 个键的 `CommonUtils` 杂物抽屉命名空间拆分为针对性命名空间（`Editor`、`FileManager`、`CopyDialog`、`Problems`、`Statistics`、`DataTable`、`Subjects`、`ProblemSets`、`Common`），移除 100 多个跨命名空间的重复键，并通过 next-intl `AppConfig` 增强加入编译期类型安全
+- **AI 提取数学排版**：多行公式现在使用单个 KaTeX `aligned` 块而非多个独立的 display math 块，渲染更清晰
+- **AI 提取分类**：含可见多步演算的题目现在一致归类为「问答题」而非有时归为「简答题」，即使最终答案是数值
 
-### Fixed
+### 修复
 
-- **Client-side search & filter**: Problem search and filtering on the subject page now runs entirely in the browser instead of making API calls, eliminating 500 errors and timeouts caused by expensive server-side tag queries
+- **客户端搜索与筛选**：科目页的题目搜索与筛选现在完全在浏览器中运行，不再调用 API，消除了昂贵服务端标签查询导致的 500 错误与超时
 
-- **Problem row Ctrl+click / middle-click**: Problem rows in both the data table and mobile card list now support Ctrl+click (Cmd+click on Mac) and middle-click to open in a new tab
+- **题目行 Ctrl+点击 / 中键点击**：数据表格与移动卡片列表中的题目行现在支持 Ctrl+点击（Mac 上为 Cmd+点击）与中键点击以在新标签页打开
 
-- **Mobile header layout**: Problem review and problem set detail page headers now stack vertically on narrow screens instead of overflowing horizontally, preventing title truncation and cut-off action buttons
+- **移动端头部布局**：题目复习与题集详情页头部在窄屏上改为纵向堆叠，不再横向溢出，防止标题截断与操作按钮被裁切
 
-- **Wide-screen layout**: Widened all page containers from `max-w-6xl` (1152px) to `max-w-screen-2xl` (1536px) so the app uses more of the viewport on wide monitors instead of leaving large blank margins
+- **宽屏布局**：所有页面容器从 `max-w-6xl`（1152px）加宽至 `max-w-screen-2xl`（1536px），使应用在宽屏显示器上使用更多视口空间，不再留大片空白边距
 
-- **Tag Filter Mode Toggle**
-  - When 2+ tags are selected, a segmented "Any / All" toggle appears inside the Tags filter dropdown
-  - "Any" (default) returns problems matching any selected tag; "All" returns only problems matching every selected tag
-  - Works on both the subject problems page (server-side filtering) and the problem set page (client-side filtering)
+- **标签筛选模式切换**
+  - 选中 2 个及以上标签时，「标签」筛选下拉框内出现分段式「任一 / 全部」切换
+  - 「任一」（默认）返回匹配任意所选标签的题目；「全部」仅返回匹配每个所选标签的题目
+  - 在科目题目页（服务端筛选）与题集页（客户端筛选）均有效
 
-- **AI Tag Suggestions During Extraction**
-  - When extracting a problem from an image, the AI model now suggests up to 3 matching existing tags and up to 3 new tags
-  - Suggested existing tags are auto-selected in the form; new tags appear as blue dashed-border pills
-  - New tags are only created in the database when the problem is saved
-  - Tag suggestions are toggleable (click to deselect/reselect) rather than permanently removed
-  - The model mimics the naming style (casing, abbreviations, language) of the user's existing tags
+- **提取时的 AI 标签建议**
+  - 从图片提取题目时，AI 模型现在会建议最多 3 个匹配的现有标签与最多 3 个新标签
+  - 建议的现有标签在表单中自动选中；新标签以蓝色虚线边框药丸显示
+  - 新标签仅在题目保存时才在数据库中创建
+  - 标签建议可切换（点击取消选择/重新选择），而非永久移除
+  - 模型会模仿用户现有标签的命名风格（大小写、缩写、语言）
 
 ## [0.2.0-beta] - 2026-03-25
 
-### Added
+### 新增
 
-- **Auto-pause review sessions**: Timer automatically pauses when the browser tab loses focus or is minimized, preventing idle time from inflating session duration
+- **自动暂停复习会话**：浏览器标签页失去焦点或被最小化时，计时器自动暂停，防止空闲时间虚增会话时长
 
-- **Weak Spots & Insights Dashboard**
-  - New `/insights` route with AI-generated narrative study briefings
-  - Per-attempt AI error categorisation (runs automatically after wrong/needs_review attempts)
-  - 7 broad error categories: conceptual, procedural, knowledge gap, misread, careless, time pressure, incomplete
-  - AI-generated topic clustering for grouping related problems
-  - Cross-subject overview with ranked weak spots, error pattern summary, and subject health assessments
-  - Per-subject deep dive with topic cluster map, mastery status bars, and progress narratives
-  - "Review these problems" integration: start targeted review sessions from any weak spot or topic cluster
-  - Error category badges inline on attempt timeline with user override support
-  - Daily digest cron job (19:00 UTC) for pre-computing insights
-  - New database tables: `error_categorisations`, `insight_digests`
-  - **Tiered insight generation**: multi-dimensional threshold replaces single error-count gate
-    - "Full" digest when ≥5 attempted problems and ≥3 with errors (existing behavior)
-    - "Mastery" digest when ≥5 attempted problems but <3 errors — celebrates accuracy instead of requiring failures
-    - "Narrow" (preliminary) digest when <5 problems but ≥3 errors — provides early analysis with limited-data caveat
-    - Progress bars showing how close the user is to unlocking insights when data is insufficient
-    - Tier badges ("Preliminary", "Mastery") on digest headers
+- **薄弱点与洞察仪表板**
+  - 新的 `/insights` 路由，提供 AI 生成的叙述式学习简报
+  - 逐次作答的 AI 错误分类（在错误/待复习作答后自动运行）
+  - 7 大类错误：conceptual、procedural、knowledge gap、misread、careless、time pressure、incomplete
+  - AI 生成的知识点聚类，用于关联相关题目
+  - 跨科目概览，含排序后的薄弱点、错误模式总结与科目健康度评估
+  - 逐科目深入分析，含知识点聚类图、掌握状态条与进度叙述
+  - 「复习这些题目」集成：可从任意薄弱点或知识点聚类启动针对性复习会话
+  - 作答时间线上的错误分类徽章，支持用户覆盖
+  - 每日摘要定时任务（UTC 19:00），用于预计算洞察
+  - 新增数据库表：`error_categorisations`、`insight_digests`
+  - **分级洞察生成**：多维阈值取代单一错误计数门槛
+    - 作答题目 ≥5 且错误 ≥3 时生成「完整」摘要（原行为）
+    - 作答题目 ≥5 但错误 <3 时生成「掌握」摘要——庆祝准确率而非要求失败
+    - 作答题目 <5 但错误 ≥3 时生成「初步」摘要——提供早期分析并附数据不足的警告
+    - 数据不足时显示进度条，展示距解锁洞察还差多少
+    - 摘要头部的分级徽章（「初步」「掌握」）
 
-- **Add to Notebook**: Copy individual problems from shared problem sets to your own notebooks
-  - Available in problem row actions and on the review page
-  - Select target subject and optionally copy tags
+- **添加到笔记本**：将题目从共享题集复制到自己的笔记本
+  - 在题目行操作与复习页中可用
+  - 选择目标科目并可选复制标签
 
-- **Problem Set Page Overhaul**
-  - Full-featured data table with search, filtering (type/tags/status), sorting, and pagination replaces the primitive problem list
-  - Mobile card list view with responsive filter toolbar for problem sets
-  - Smart filter criteria display with structured layout, colored status badges, and icons
-  - Owner profile card with hover popover (avatar, display name, bio, gender) for shared problem sets
-  - "Copy to My Library" deep-copy feature: duplicate problems + set into user's account with subject picker and optional tag copying
-  - `allow_copying` toggle per problem set (default: true) in creation and edit dialogs
-  - Owner-only progress stats (total/wrong/needs review/mastered); non-owners see simple problem count
-  - Viewer-only review sessions: ungated navigation, no assessment form, clean session completion
+- **题集页面重构**
+  - 全功能数据表格（搜索、筛选（类型/标签/状态）、排序、分页）取代原始题目列表
+  - 移动端卡片列表视图，带响应式筛选工具栏
+  - 智能筛选条件展示，含结构化布局、彩色状态徽章与图标
+  - 共享题集的所有者主页卡片，带悬停弹层（头像、显示名、简介、性别）
+  - 「复制到我的文库」深拷贝功能：将题目 + 题集复制到用户账户，带科目选择器与可选标签复制
+  - 每个题集的 `allow_copying` 切换（默认开启），位于创建与编辑对话框中
+  - 所有者专属进度统计（总/错/待复习/已掌握）；非所有者仅看到简单题目数
+  - 仅查看的复习会话：无门槛导航、无评估表单、干净的会话结束
 
-- **Spaced Repetition System (SM-2)**
-  - SM-2 algorithm implementation for intelligent review scheduling (`web/lib/spaced-repetition.ts`)
-  - Review schedule automatically updates after each attempt using SM-2 quality derived from `selected_status`
-  - New problems get a review schedule on creation; existing problems seeded based on status
-  - "Due" badge on notebook cards showing how many problems need review per subject
-  - Session size picker dialog (5, 10, 20, or All) before starting a spaced review
-  - Full spaced review session flow: review problems, self-assess non-auto-mark problems, complete summary
-  - SR status prompt for non-auto-mark problems using the unified attempt status form
-  - Database RPCs for efficient due count queries (`get_due_problems_count`, `get_due_problems_for_subject`)
-  - Extended `get_subjects_with_metadata` RPC with `due_count` field
-  - Review schedule cache invalidation on session completion
-  - Comprehensive Vitest unit tests for SM-2 algorithm (24 test cases)
+- **间隔重复系统（SM-2）**
+  - 用于智能复习调度的 SM-2 算法实现（`web/lib/spaced-repetition.ts`）
+  - 每次作答后根据由 `selected_status` 推导的 SM-2 质量分自动更新复习计划
+  - 新建题目在创建时获得复习计划；现有题目按状态回填
+  - 笔记本卡片上的「到期」徽章，显示各科目待复习题目数
+  - 开始间隔复习前的会话规模选择对话框（5、10、20 或全部）
+  - 完整间隔复习会话流程：复习题目、对非自动判题题目自我评估、完成总结
+  - 使用统一作答状态表单的 SR 状态提示（针对非自动判题题目）
+  - 用于高效到期数查询的数据库 RPC（`get_due_problems_count`、`get_due_problems_for_subject`）
+  - 扩展 `get_subjects_with_metadata` RPC，新增 `due_count` 字段
+  - 会话完成时使复习计划缓存失效
+  - SM-2 算法的综合 Vitest 单元测试（24 个测试用例）
 
-- **Subject Problems Page UX Improvements**
-  - Stats strip showing total problems, proportional status bar (wrong/review/mastered), and mastery percentage
-  - Empty state with illustration and CTA buttons when no problems exist
-  - Floating action button (split pill: Write / Scan) at bottom of viewport for quick problem creation
-  - Form opens inline at top of page with slide-in animation, replacing the always-visible card form
-  - Confirmation dialog when switching from create to edit mode with unsaved data
-  - Table row left-border color accents by status (red/amber/green) and reduced opacity for mastered rows
-  - Mobile card list view (below 768px) with status-colored borders, overflow menus, and "Show more" pagination
-  - Mobile-responsive search/filter toolbar with popover filters and select mode toggle
-  - `useMediaQuery` and `useIsMobile` hooks for responsive layout switching
+- **科目题目页 UX 改进**
+  - 统计条：总题目数、比例状态条（错/待复习/已掌握）与掌握百分比
+  - 无题目时的空状态，含插画与 CTA 按钮
+  - 视口底部悬浮操作按钮（分段式药丸：写入 / 扫描），快速创建题目
+  - 表单改为在页面顶部内联打开并带滑入动画，取代常驻卡片表单
+  - 从创建切换到编辑模式且存在未保存数据时弹出确认对话框
+  - 表格行左边框按状态着色（红/琥珀/绿），已掌握行降低透明度
+  - 移动端卡片列表视图（低于 768px），带状态着色边框、溢出菜单与「显示更多」分页
+  - 移动端响应式搜索/筛选工具栏，带弹层筛选与选择模式切换
+  - `useMediaQuery` 与 `useIsMobile` 钩子用于响应式布局切换
 
-### Fixed
+### 修复
 
-- **Insights Digest Accuracy**
-  - Fixed overcounting in error distribution (now counts per unique problem, not per attempt)
-  - Fixed mastered topics incorrectly appearing as weak spots
-  - Fixed cluster merge inflating mastered/wrong counts when clusters share problems
-  - Added total problem counts per subject for balanced AI assessments (not just errors)
+- **洞察摘要准确性**
+  - 修复错误分布中的重复计数（现按每道唯一题目而非每次作答计数）
+  - 修复已掌握主题被错误列为薄弱点
+  - 修复聚类合并因共享题目而虚增已掌握/错误计数
+  - 为每个科目增加题目总数，以便 AI 均衡评估（而非仅看错误）
 
-- **Review Session Bug for Non-Owner Users**
-  - Fixed Next button permanently disabled in read-only review sessions (form saved callback never fired)
-  - Read-only sessions now skip API calls for progress tracking and session completion
-  - Session completes cleanly by redirecting back to problem set page
+- **非所有者用户的复习会话错误**
+  - 修复只读复习会话中「Next」按钮被永久禁用的问题（表单保存回调从未触发）
+  - 只读会话现在跳过进度跟踪与会话完成的 API 调用
+  - 会话通过重定向回题集页面干净地结束
 
-- Fixed DataTable ignoring the `meta` prop, which prevented "Remove from set" action from working in problem set tables
+- 修复 DataTable 忽略 `meta` 属性，导致题集表格中「从题集移除」操作失效
 
-- **Timezone-Aware Day Boundaries**
-  - All day-boundary features (streaks, heatmap, weekly progress, quotas, SM-2 same-day guard) now respect the user's configured timezone instead of UTC
-  - Auto-detection of browser timezone on every authenticated page load, synced to profile when changed
+- **时区感知的日期边界**
+  - 所有日期边界功能（连续打卡、热力图、周进度、配额、SM-2 同日防护）现在遵循用户配置的时区而非 UTC
+  - 每次已认证页面加载时自动检测浏览器时区，变更时同步到资料
 
-### Changed
+### 变更
 
-- **Unified Status Selection & Attempt Logging**
-  - Merged StatusSelector and ReflectionDialog into a single embedded `AttemptStatusForm` in the review sidebar — every status assessment now creates an attempt record
-  - Replaced `is_correct` + `confidence` SR input with three-tier `selected_status` (`wrong`/`needs_review`/`mastered`) mapped directly to SM-2 quality scores (1/3/5)
-  - Auto-mark problems pre-select status based on correctness and constrain available options (wrong→Wrong/Needs Review, correct→Needs Review/Mastered)
-  - Added `selected_status` column to `attempts` table with backfill migration
-  - API routes (`POST /api/attempts`, `PATCH /api/attempts/[id]`) now sync `problems.status` and recalculate review schedule when `selected_status` is provided
-  - Timeline entries now show status badges (Wrong/Needs Review/Mastered) instead of Correct/Incorrect; removed confidence dots
-  - Session clients (problem-set and spaced review) gate "Next" on form save instead of separate status selection
-  - Form state persists across session navigation via `AttemptState` cache with `selectedStatus` and `formSaved` fields
+- **统一状态选择与作答记录**
+  - 将 StatusSelector 与 ReflectionDialog 合并为复习侧边栏中单个内嵌 `AttemptStatusForm`——每次状态评估现在都会创建作答记录
+  - 用三层 `selected_status`（`wrong`/`needs_review`/`mastered`）取代 `is_correct` + `confidence` SR 输入，直接映射为 SM-2 质量分（1/3/5）
+  - 自动判题题目根据正确性预选状态并约束可用选项（wrong→Wrong/Needs Review，correct→Needs Review/Mastered）
+  - 在 `attempts` 表新增 `selected_status` 列并附带回填迁移
+  - API 路由（`POST /api/attempts`、`PATCH /api/attempts/[id]`）在提供 `selected_status` 时同步 `problems.status` 并重算复习计划
+  - 时间线条目现在显示状态徽章（Wrong/Needs Review/Mastered）而非 Correct/Incorrect；移除置信度圆点
+  - 会话客户端（题集与间隔复习）将「Next」门控在表单保存上，而非单独的状态选择
+  - 表单状态通过含 `selectedStatus` 与 `formSaved` 字段的 `AttemptState` 缓存跨会话导航持久化
 
-- **Subject Problems Page Layout**
-  - Removed the always-visible "Add a problem" card; creation now triggered via FAB or empty state CTAs
-  - Edit form state lifted from `EnhancedProblemsTable` to `ProblemsPageClient` for unified form management
-  - Responsive page header: title and back link stack vertically on mobile
-  - Back link shows "Back" on mobile, "Back to Shelf" on desktop
+- **科目题目页布局**
+  - 移除常驻「添加题目」卡片；创建改由 FAB 或空状态 CTA 触发
+  - 编辑表单状态从 `EnhancedProblemsTable` 提升到 `ProblemsPageClient`，统一表单管理
+  - 响应式页面头部：标题与返回链接在移动端纵向堆叠
+  - 返回链接在移动端显示「Back」，桌面端显示「Back to Shelf」
 
-- **MCQ Choice Randomization During Review**
-  - Per-problem "Randomize choices during review" toggle in the MCQ choice editor (on by default)
-  - When enabled, review UI shuffles the display order of MCQ choices using Fisher-Yates shuffle
-  - Choice IDs (A, B, C, D) are hidden during the first attempt and revealed after submission, preventing positional memorization while keeping attempt history meaningful
-  - Backward-compatible: existing problems without the field default to randomization on
+- **复习时选择题选项随机化**
+  - 选择题选项编辑器中新增逐题「复习时随机化选项」切换（默认开启）
+  - 启用后，复习 UI 使用 Fisher-Yates 洗牌打乱选择题选项的显示顺序
+  - 选项 ID（A、B、C、D）在首次作答前隐藏、提交后显示，防止位置记忆，同时保留作答历史的意义
+  - 向后兼容：无此字段的既有题目默认启用随机化
 
-- **Client-Side Image Compression for Extraction**
-  - Large images (base64 > 4.3 MB) are automatically compressed before sending to the extraction API
-  - Prevents Vercel's 4.5 MB serverless payload limit from rejecting uploads
-  - Downscales to max 1500px on the longest side and re-encodes as JPEG at 0.8 quality
-  - Small images skip compression entirely — no change in behavior
+- **提取时的客户端图片压缩**
+  - 大图片（base64 > 4.3 MB）在发送到提取 API 前自动压缩
+  - 防止 Vercel 的 4.5 MB serverless 载荷上限拒绝上传
+  - 最长边缩小至最大 1500px，并以 0.8 质量重新编码为 JPEG
+  - 小图片完全跳过压缩——行为不变
 
-- **QR Code Phone-to-Desktop Upload**
-  - Scan a QR code on desktop to open a lightweight mobile capture page
-  - Sessions expire after 5 minutes
-  - Supabase Realtime detects uploaded images instantly and feeds them into the AI extraction flow
-  - QR code generation is on-demand instead of auto-creating on mount
+- **二维码手机到桌面传输**
+  - 扫描桌面端二维码，打开轻量移动端拍照页
+  - 会话 5 分钟后过期
+  - Supabase Realtime 即时检测已上传图片，并将其送入 AI 提取流程
+  - 二维码按需生成，而非挂载时自动创建
 
-- **Save Extraction Image as Asset**
-  - Opt-in toggles in the image scan preview to save the source image as a problem asset, solution asset, or both
-  - Image is automatically uploaded and attached to the problem after extraction
+- **将提取图片保存为素材**
+  - 图片扫描预览中的选择加入切换，可将源图片保存为题目素材、解答素材或两者
+  - 提取后图片自动上传并附着到题目
 
-- **Attempt History & Self-Reflection**
-  - Post-submission reflection dialog for auto-marked problems (confidence, cause category, notes)
-  - Only the first submission per session is recorded as an attempt; resubmissions are mark-only
-  - "Reflect" button appears after any submission for optional reflection
-  - Manual attempt logging for non-auto-marked problems with self-assessment toggle
-  - Collapsible attempt history timeline in the review sidebar with smooth animations
-  - Expandable timeline entries showing result, confidence dots, cause, and reflection notes
-  - Edit reflection data from timeline entries at any time
-  - `PATCH /api/attempts/[id]` endpoint for updating reflection data
-  - Database migration: `is_self_assessed`, `confidence`, `reflection_notes`, `updated_at` columns on `attempts` table
+- **作答历史与自我反思**
+  - 自动判题题目的提交后反思对话框（置信度、原因类别、备注）
+  - 每个会话仅记录首次提交为作答；重新提交仅标记
+  - 任意提交后出现「反思」按钮，供可选反思
+  - 非自动判题题目的手动作答记录，带自我评估切换
+  - 复习侧边栏中可折叠的作答历史时间线，带平滑动画
+  - 可展开的时间线条目显示结果、置信度圆点、原因与反思备注
+  - 可随时从时间线条目编辑反思数据
+  - `PATCH /api/attempts/[id]` 端点用于更新反思数据
+  - 数据库迁移：`attempts` 表新增 `is_self_assessed`、`confidence`、`reflection_notes`、`updated_at` 列
 
-### Removed
+### 移除
 
-- `StatusSelector` component (replaced by `AttemptStatusForm`)
-- `ReflectionDialog` component (replaced by `AttemptStatusForm` + `AttemptEditDialog`)
-- `ConfidenceSelector` component (confidence removed from UI)
-- `SRCorrectnessPrompt` component (replaced by `AttemptStatusForm`)
-- `StatusSelectorProps` interface from types
-- `mapConfidenceToQuality()` function (replaced by `mapStatusToQuality()`)
-- `DEFAULT_CONFIDENCE` constant (no longer needed)
+- `StatusSelector` 组件（由 `AttemptStatusForm` 取代）
+- `ReflectionDialog` 组件（由 `AttemptStatusForm` + `AttemptEditDialog` 取代）
+- `ConfidenceSelector` 组件（置信度已从 UI 移除）
+- `SRCorrectnessPrompt` 组件（由 `AttemptStatusForm` 取代）
+- types 中的 `StatusSelectorProps` 接口
+- `mapConfidenceToQuality()` 函数（由 `mapStatusToQuality()` 取代）
+- `DEFAULT_CONFIDENCE` 常量（不再需要）
 
 ## [0.1.0-beta] - 2025-09-27
 
-### Added
+### 新增
 
-- **Subject Management**
-  - Create, edit, and delete subjects for organizing problems
-  - Subject-based navigation and filtering
-  - Clean subject management interface
+- **科目管理**
+  - 创建、编辑和删除科目以组织题目
+  - 基于科目的导航与筛选
+  - 简洁的科目管理界面
 
-- **Problem Management System**
-  - Create problems with three types: Multiple Choice, Short Answer, and Extended Response
-  - Rich text content support with HTML formatting
-  - Problem status tracking (Wrong, Needs Review, Mastered)
-  - Auto-marking capability for multiple choice questions
-  - Problem editing and deletion functionality
+- **题目管理系统**
+  - 支持三种类型的题目：选择题、简答题、问答题
+  - 富文本内容支持，带 HTML 格式化
+  - 题目状态跟踪（Wrong、Needs Review、Mastered）
+  - 选择题的自动判题能力
+  - 题目编辑与删除功能
 
-- **Tag System**
-  - Create and manage tags within subjects
-  - Tag problems for better organization and filtering
-  - Global tag overview across all subjects
+- **标签系统**
+  - 在科目内创建和管理标签
+  - 为题目打标签以便更好地组织与筛选
+  - 跨所有科目的全局标签总览
 
-- **Problem Review Interface**
-  - Interactive problem review with answer submission
-  - Support for different answer input types (text, textarea, multiple choice)
-  - Automatic answer validation for auto-marked problems
-  - Manual review workflow for complex problems
-  - Problem navigation (previous/next) within subjects
+- **题目复习界面**
+  - 交互式题目复习与答案提交
+  - 支持不同答案输入类型（文本、多行文本、选择题）
+  - 自动判题题目的自动答案验证
+  - 复杂题目的手动评阅工作流
+  - 科目内题目导航（上一个/下一个）
 
-- **File Upload and Asset Management**
-  - Upload images and PDFs as problem assets
-  - Secure file storage with user-based access control
-  - Asset preview functionality for images and PDFs
-  - Solution assets for detailed explanations
+- **文件上传与素材管理**
+  - 上传图片和 PDF 作为题目素材
+  - 基于用户访问控制的安全文件存储
+  - 图片与 PDF 的素材预览功能
+  - 详细讲解的解答素材
 
-- **Solution Management**
-  - Add detailed solution text and assets to problems
-  - Solution reveal functionality for self-assessment
-  - Rich solution content with multimedia support
+- **解答管理**
+  - 为题目添加详细解答文本与素材
+  - 自我评估的解答展示功能
+  - 支持多媒体的富解答内容
 
-<!-- Links -->
+<!-- 链接 -->
 
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
-<!-- Versions -->
+<!-- 版本 -->
 
 [unreleased]: https://github.com/mrmagic2020/Wong-Question-Notebook/compare/v0.2.0-beta...HEAD
 [0.2.0-beta]: https://github.com/mrmagic2020/Wong-Question-Notebook/compare/v0.1.0-beta...v0.2.0-beta

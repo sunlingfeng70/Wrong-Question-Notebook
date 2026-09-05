@@ -1,181 +1,181 @@
-# Project Proposal: Wrong-Question Notebook Web Application
+# 项目提案：错题笔记本 Web 应用
 
-## 1. Overview
+## 1. 概述
 
-The **Wrong-Question Notebook (WQN)** is a web-based application designed to help students systematically track, organise, and revise the problems they answered incorrectly. Unlike traditional error logs, WQN supports **multi-subject problem banks**, **custom knowledge tags**, **smart filtering**, and **AI-powered review sessions**.
+**错题笔记本（WQN）** 是一个基于 Web 的应用，旨在帮助学生系统性地记录、整理和复习自己做错的题目。与传统的错题本不同，WQN 支持**多科目题库**、**自定义知识标签**、**智能筛选**以及**AI 驱动的复习会话**。
 
-## 2. Objectives
+## 2. 目标
 
-* Provide students with a **structured problem base** for each subject.
-* Allow fine-grained **tagging of mistakes by concept/knowledge area**.
-* Enable **smart revision sessions** where students can filter by tags, subjects, or error frequency.
-* Offer **analytics dashboards** to highlight weak spots and improvement trends.
-* Support **AI/LLM-powered assistance** (optional), e.g. suggesting tags, generating similar practice problems, or guiding reflection on mistakes.
+* 为每个科目提供**结构化的题库**。
+* 支持按**概念/知识领域**对错题进行细粒度**打标签**。
+* 提供**智能复习会话**，学生可按标签、科目或错误频率筛选。
+* 提供**分析仪表板**，突出薄弱点与进步趋势。
+* 支持**AI/LLM 辅助**（可选），例如建议标签、生成相似练习题或引导对错题的反思。
 
-## 3. Core Functionalities
+## 3. 核心功能
 
-### 3.1 User Features
+### 3.1 用户功能
 
-* **Account system** (email/password, Google login, etc.).
-* **Subject problem banks** – each subject has its own collection of questions.
-* **Add problems manually** (text, LaTeX support, image/PDF upload with optional OCR).
-* **Problem type selection** – when adding problems, students can:
+* **账户系统**（邮箱/密码、Google 登录等）。
+* **科目题库**——每个科目有独立的题目集合。
+* **手动添加题目**（文本、LaTeX 支持、图片/PDF 上传并可选 OCR）。
+* **题目类型选择**——添加题目时，学生可以：
 
-  * Choose a **problem type** (e.g. multiple choice, fill-the-gap, short answer, extended response).
-  * Optionally provide a **correct answer** (e.g. MC choice, numerical value, string, model answer).
-  * Decide whether the system should **auto-mark** the problem during revision (auto-check vs manual review).
-* **Tagging system** – users can assign multiple tags (knowledge areas, exam sections, etc.) to a problem.
-* **Wrong-question logging** – mark problems as “wrong”, “needs review”, or “mastered”.
-* **Filtering & search** – select problems by subject, tag, status, or time range.
-* **Review mode** – system presents logged wrong questions, either in random order or filtered by tag/weakness.
-* **Analytics dashboard** – visual breakdown of mistakes by tag, subject, frequency, and progress over time.
-* **Spaced repetition scheduling** – resurfacing wrong questions at optimal intervals (similar to Anki).
+  * 选择**题目类型**（如选择题、填空题、简答题、问答题）。
+  * 可选地提供**正确答案**（如选择题选项、数值、字符串、参考答案）。
+  * 决定系统是否应在复习时**自动判题**（自动批改 vs 手动评阅）。
+* **标签系统**——用户可为题目分配多个标签（知识领域、考试板块等）。
+* **错题记录**——将题目标记为「错误」「待复习」或「已掌握」。
+* **筛选与搜索**——按科目、标签、状态或时间范围筛选题目。
+* **复习模式**——系统呈现已记录的错题，可随机排序或按标签/薄弱点筛选。
+* **分析仪表板**——按标签、科目、频率及随时间进展可视化错误分布。
+* **间隔重复调度**——以最优间隔重现错题（类似 Anki）。
 
-### 3.2 AI/LLM-powered Extensions
+### 3.2 AI/LLM 扩展
 
-* **Automatic tag suggestion** based on question content.
-* **AI tutor mode** – explain solutions, highlight common mistakes, or generate hints.
-* **Practice problem generation** – create new problems targeting the same tags/knowledge gaps.
-* **Reflection prompts** – encourage students to write why they got it wrong (e.g., “misread question,” “formula error”).
+* 根据题目内容**自动建议标签**。
+* **AI 辅导模式**——讲解解答、指出常见错误或生成提示。
+* **练习题目生成**——创建针对相同标签/知识缺口的新题目。
+* **反思提示**——鼓励学生写下做错的原因（如「审题不清」「公式错误」）。
 
-### 3.3 Teacher / Collaboration Features (Phase 2)
+### 3.3 教师 / 协作功能（第二阶段）
 
-* Shared problem banks (teacher-to-student).
-* Class dashboards (aggregate student mistake trends).
-* Peer sharing of wrong-question notebooks.
+* 共享题库（教师对学生）。
+* 班级仪表板（汇总学生错题趋势）。
+* 错题笔记本的同伴共享。
 
-## 4. Workflows
+## 4. 工作流
 
-### 4.1 Student Workflow
+### 4.1 学生工作流
 
-1. Student logs into WQN.
-2. Opens subject → clicks “Add Problem.”
-3. Uploads text/image/PDF or types question → assigns tags.
-4. Selects **problem type**, optionally provides correct answer, and chooses auto-marking option.
-5. Marks problem as wrong / review needed.
-6. Later, selects **Review Session** → chooses subject/tags.
-7. Solves problems, system auto-marks (if enabled), and student updates status.
-8. Analytics update automatically.
+1. 学生登录 WQN。
+2. 打开科目 → 点击「添加题目」。
+3. 上传文本/图片/PDF 或输入题目 → 分配标签。
+4. 选择**题目类型**，可选地提供正确答案并选择自动判题选项。
+5. 将题目标记为错误 / 待复习。
+6. 之后选择**复习会话** → 选择科目/标签。
+7. 解答题目，系统自动判题（若启用），学生更新状态。
+8. 分析自动更新。
 
-### 4.2 Teacher Workflow (future feature)
+### 4.2 教师工作流（未来功能）
 
-1. Teacher creates subject bank → shares with class.
-2. Students solve → system auto-logs mistakes.
-3. Teacher views aggregated analytics → adjusts teaching focus.
+1. 教师创建科目题库 → 与班级分享。
+2. 学生解答 → 系统自动记录错误。
+3. 教师查看汇总分析 → 调整教学重点。
 
-## 5. Technology Stack — Provider Decisions
+## 5. 技术栈 —— 供应商决策
 
-### 5.1 Frontend
+### 5.1 前端
 
-* **Framework:** Next.js (React).
-* **Hosting/CDN:** **Vercel** – first-class Next.js support, global edge network (with APAC POPs), instant preview builds.
+* **框架：** Next.js（React）。
+* **托管/CDN：** **Vercel**——一流的 Next.js 支持、全球边缘网络（含 APAC POP）、即时预览构建。
 
-### 5.2 Backend
+### 5.2 后端
 
-* **Runtime:** **Vercel Serverless Functions** (for lightweight API routes) + **Supabase Edge Functions** (for DB-adjacent logic and scheduled tasks).
-* **Justification:** Seamless integration, minimal ops, fast developer iteration.
+* **运行时：** **Vercel Serverless Functions**（用于轻量 API 路由）+ **Supabase Edge Functions**（用于数据库邻近逻辑与定时任务）。
+* **理由：** 无缝集成、运维成本最低、开发迭代快。
 
-### 5.3 Database
+### 5.3 数据库
 
-* **Database:** **Supabase Postgres (ap-southeast-2)**.
-* **Why:** Managed Postgres with **Row-Level Security**, **pgvector** for semantic search, and local Sydney region for low latency.
+* **数据库：** **Supabase Postgres（ap-southeast-2）**。
+* **原因：** 托管 Postgres，具备**行级安全**（RLS）、用于语义搜索的 **pgvector**，以及悉尼本地区域以降低延迟。
 
-### 5.4 Authentication
+### 5.4 身份验证
 
-* **Auth provider:** **Supabase Auth**.
-* **Why:** Works seamlessly with Postgres and RLS policies, supports email/password + OAuth logins.
+* **认证提供方：** **Supabase Auth**。
+* **原因：** 与 Postgres 和 RLS 策略无缝协作，支持邮箱/密码 + OAuth 登录。
 
-### 5.5 Storage
+### 5.5 存储
 
-* **File storage:** **Supabase Storage**.
-* **Why:** S3-compatible, built-in policies, integrated with auth for per-user buckets.
+* **文件存储：** **Supabase Storage**。
+* **原因：** S3 兼容、内置策略、与认证集成实现按用户分桶。
 
-### 5.6 Search
+### 5.6 搜索
 
-* **Initial:** Postgres Full-Text Search.
-* **Scaling path:** Move to **Typesense** if advanced ranking/performance is needed.
+* **初始方案：** Postgres 全文搜索。
+* **扩展路径：** 若需要高级排序或更高性能，迁移至 **Typesense**。
 
-### 5.7 Caching / Rate-Limiting
+### 5.7 缓存 / 限流
 
-* **Service:** **Upstash Redis**.
-* **Why:** Serverless, usage-based pricing, ideal for sessions, queues, and throttling.
+* **服务：** **Upstash Redis**。
+* **原因：** Serverless、按用量计费，适合会话、队列与限流。
 
 ### 5.8 OCR
 
-* **Primary:** **Google Cloud Vision API**.
-* **Optional (maths-heavy):** **Mathpix** for LaTeX equation recognition.
+* **主要方案：** **Google Cloud Vision API**。
+* **可选（数学场景）：** **Mathpix** 用于 LaTeX 公式识别。
 
 ### 5.9 AI/LLM
 
-* **Primary provider:** **OpenAI GPT-4.x family**.
-* **Fallback/abstraction:** Support for Anthropic Claude or local LLMs.
-* **Use cases:** Tag suggestion, solution hints, practice question generation.
+* **主要供应商：** **OpenAI GPT-4.x 系列**。
+* **回退/抽象：** 支持 Anthropic Claude 或本地 LLM。
+* **应用场景：** 标签建议、解答提示、练习题生成。
 
-### 5.10 Embeddings & Vector Store
+### 5.10 嵌入与向量存储
 
-* **Embedding model:** **OpenAI text-embedding-3-small**.
-* **Storage:** **pgvector in Supabase Postgres**.
+* **嵌入模型：** **OpenAI text-embedding-3-small**。
+* **存储：** **Supabase Postgres 中的 pgvector**。
 
-### 5.11 Analytics
+### 5.11 分析
 
-* **Product analytics:** **PostHog** (hosted).
-* **Why:** Event tracking, funnels, retention, and feature flags in one tool.
+* **产品分析：** **PostHog**（托管）。
+* **原因：** 事件跟踪、漏斗、留存与功能开关集于一体。
 
-### 5.12 Error Monitoring
+### 5.12 错误监控
 
-* **Service:** **Sentry**.
-* **Why:** Unified FE/BE error tracking, performance tracing, great developer tooling.
+* **服务：** **Sentry**。
+* **原因：** 统一的前后端错误跟踪、性能追踪、出色的开发者工具。
 
-### 5.13 Email
+### 5.13 邮件
 
-* **Provider:** **Resend**.
-* **Why:** Modern API, simple setup, great developer UX.
+* **供应商：** **Resend**。
+* **原因：** 现代 API、设置简单、开发者体验出色。
 
 ### 5.14 CI/CD
 
-* **Primary:** **GitHub Actions** for lint/tests/build.
-* **Deploys:** Vercel handles previews & production.
+* **主要方案：** **GitHub Actions** 用于 lint/测试/构建。
+* **部署：** Vercel 负责预览与生产环境。
 
-### 5.15 Payments (future)
+### 5.15 支付（未来）
 
-* **Provider:** **Stripe**.
-* **Why:** Best-in-class for subscriptions, global coverage, developer-friendly.
+* **供应商：** **Stripe**。
+* **原因：** 订阅领域一流、全球覆盖、开发者友好。
 
-## 6. Development Roadmap
+## 6. 开发路线图
 
-### Phase 1 – MVP (3 months)
+### 第一阶段 —— MVP（3 个月）
 
-* Core CRUD for questions, subjects, tags.
-* Problem types + optional answers + auto-marking.
-* Wrong-question marking & filtering.
-* Basic review mode.
-* Simple analytics dashboard.
-* Authentication & storage.
+* 题目、科目、标签的核心增删改查。
+* 题目类型 + 可选答案 + 自动判题。
+* 错题标记与筛选。
+* 基础复习模式。
+* 简单的分析仪表板。
+* 身份验证与存储。
 
-### Phase 2 – Smart Features (3–6 months)
+### 第二阶段 —— 智能功能（3–6 个月）
 
-* Spaced repetition scheduling.
-* AI-powered tag suggestion & hints.
-* OCR for images/PDFs.
-* Enhanced analytics (progress tracking).
+* 间隔重复调度。
+* AI 驱动的标签建议与提示。
+* 图片/PDF 的 OCR。
+* 增强分析（进度跟踪）。
 
-### Phase 3 – Collaboration & Scaling
+### 第三阶段 —— 协作与扩展
 
-* Teacher dashboards.
-* Class-sharing features.
-* API integrations with LMS (Canvas, Google Classroom).
-* Mobile app (React Native / Expo).
+* 教师仪表板。
+* 班级共享功能。
+* 与 LMS 的 API 集成（Canvas、Google Classroom）。
+* 移动应用（React Native / Expo）。
 
-## 7. Risks & Considerations
+## 7. 风险与考量
 
-* **Data privacy:** Must comply with GDPR/FERPA; encrypt data in transit and at rest.
-* **AI reliability:** LLMs may hallucinate; disclaimers and human override required.
-* **Adoption curve:** Many students/teachers use Excel/Notion; UX must feel faster and more valuable.
-* **Scalability:** Plan for >10k problems per user with efficient tag queries and search indexing.
+* **数据隐私：** 必须符合 GDPR/FERPA；对传输中和静态数据进行加密。
+* **AI 可靠性：** LLM 可能产生幻觉；需要免责声明与人工覆盖。
+* **采纳曲线：** 许多学生/教师使用 Excel/Notion；UX 必须更快速、更有价值。
+* **可扩展性：** 规划每个用户 >10k 道题，并具备高效的标签查询与搜索索引。
 
-## 8. Success Metrics
+## 8. 成功指标
 
-* Weekly active students logging problems.
-* Review session completion rates.
-* Decrease in repeated mistakes per user.
-* Teacher/classroom adoption in Phase 2.
+* 每周活跃记录题目的学生数。
+* 复习会话完成率。
+* 每个用户重复犯错次数的下降。
+* 第二阶段的教师/班级采纳情况。

@@ -1,13 +1,13 @@
-## Agent skills
+## Agent 技能
 
-### Issue tracker
+### 问题追踪器
 
-Issues live in this repo's GitHub Issues, operated via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+本仓库的问题与规范存放在 GitHub Issues 中，所有操作通过 `gh` 命令行进行。参见 `docs/agents/issue-tracker.md`。
 
-### Triage labels
+### 分诊标签
 
-Five canonical triage roles map to default labels. See `docs/agents/triage-labels.md`.
+五种规范分诊角色对应到默认标签。参见 `docs/agents/triage-labels.md`。
 
-### Domain docs
+### 领域文档
 
-Single-context: root `CONTEXT.md` + `docs/adr/`. See `docs/agents/domain.md`.
+单上下文：根目录 `CONTEXT.md` + `docs/adr/`。参见 `docs/agents/domain.md`。

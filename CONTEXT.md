@@ -1,108 +1,108 @@
 # Wrong Question Notebook (WQN)
 
-WQN is a web application that helps students track, organise, and revise the problems they answered incorrectly. It turns a physical error log into an interactive system of notebooks, problems, review sessions, and AI-assisted insight.
+WQN 是一个帮助学生记录、整理和复习错题的 Web 应用。它将纸质错题本变成一套由笔记本、题目、复习会话与 AI 辅助洞察组成的交互式系统。
 
-## Language
+## 语言
 
-### Core objects
+### 核心对象
 
-**Notebook**:
-A colour-coded, icon-labelled collection that organises a student's problems by topic (Mathematics, Physics, …).
-_Avoid_: Subject — the product has moved to "notebook"; "subject" survives only as the legacy name in code, database, and some UI strings.
+**Notebook（笔记本）**：
+一组带颜色和图标标识的集合，按科目（数学、物理……）组织学生的题目。
+_避免_：Subject（科目）——产品已改用「notebook」；「subject」仅作为代码、数据库及部分 UI 文案中的遗留名称保留。
 
-**Notebook Shelf**:
-The student's home view showing all of their notebooks, each with its problem count and review-due summary.
-_Avoid_: Dashboard, subject list.
+**Notebook Shelf（笔记本书架）**：
+学生的首页视图，展示其所有笔记本，每本附带题目数量与待复习摘要。
+_避免_：Dashboard、subject list（科目列表）。
 
-**Problem**:
-A single recorded question the student is practising or got wrong, with content, a type, a mastery status, and optionally an answer configuration and solution.
-_Avoid_: Question, exercise (when referring to the stored record).
+**Problem（题目）**：
+学生练习或做错的单道已记录题目，包含内容、类型、掌握状态，以及可选的答案配置与解答。
+_避免_：Question、exercise（当指代已保存的记录时）。
 
-**Problem Type**:
-The kind of question a problem is — Multiple Choice (MCQ), Short Answer, or Extended Response.
-_Avoid_: Q-type, question kind.
+**Problem Type（题目类型）**：
+题目的种类——选择题（MCQ）、简答题或问答题。
+_避免_：Q-type、question kind。
 
-**Tag**:
-A keyword label, scoped to a notebook, attached to problems for fine-grained categorisation and filtering.
+**Tag（标签）**：
+作用域限定在笔记本内的关键词标签，附着在题目上用于细粒度分类与过滤。
 
-**Answer Configuration**:
-How a problem's correct answer is expressed — a choice (MCQ), a list of acceptable short texts, or a numeric value with a tolerance and optional unit.
-_Avoid_: Correct answer (when you mean the config, not the stored value).
+**Answer Configuration（答案配置）**：
+题目正确答案的表达方式——一个选项（MCQ）、一组可接受的简短文本，或一个带容差及可选单位的数值。
+_避免_：Correct answer（当你指的是配置而非已保存的值时）。
 
-**Mastery Status**:
-The lifecycle state of a problem: Wrong → Needs Review → Mastered.
-_Avoid_: Status, progress (alone, both are ambiguous).
+**Mastery Status（掌握状态）**：
+题目的生命周期状态：Wrong（错误）→ Needs Review（待复习）→ Mastered（已掌握）。
+_避免_：Status、progress（单独使用两者均有歧义）。
 
-**Attempt**:
-A single recorded answer submission with its outcome and, when self-assessed, the student's own judgment of how it went.
-_Avoid_: Submission, response (when referring to the saved record).
+**Attempt（作答记录）**：
+单次提交的答案及其结果，若是自我评估，还包括学生自己对作答情况的主观判断。
+_避免_：Submission、response（当指代已保存的记录时）。
 
-**Error Cause**:
-Why the student got a problem wrong — conceptual misunderstanding, procedural error, knowledge gap, misread the question, careless mistake, ran out of time, or incomplete answer.
-_Avoid_: Reason, mistake type, category.
+**Error Cause（错误原因）**：
+学生做错题目的原因——概念性理解错误、步骤性错误、知识盲区、审题不清、粗心失误、时间不足或答案不完整。
+_避免_：Reason、mistake type、category。
 
-### Review
+### 复习
 
-**Review Session**:
-A structured, pausable run through a set of problems during which the student submits attempts. A session is Normal, Spaced Repetition, or Insights Review.
-_Avoid_: Practice mode (practice mode is the untracked preview variant, not a session).
+**Review Session（复习会话）**：
+一次结构化、可暂停的题目演练过程，期间学生提交作答。会话分为 Normal（常规）、Spaced Repetition（间隔重复）或 Insights Review（洞察复习）。
+_避免_：Practice mode（练习模式是不计入记录的预览变体，不属于会话）。
 
-**Spaced Repetition**:
-Scheduling each problem's next review at growing intervals based on how it was answered, so due problems resurface at the right time.
-_Avoid_: SRS (internal only), revision plan.
+**Spaced Repetition（间隔重复）**：
+根据作答情况，以递增间隔安排每道题下次复习时间的调度方式，使到期题目在正确的时间点重现。
+_避免_：SRS（仅内部使用）、revision plan。
 
-**Insights Review**:
-A review session assembled from a student's identified weak spots to target specific error patterns.
-_Avoid_: Smart review, weakness drill.
+**Insights Review（洞察复习）**：
+根据学生已识别的薄弱点组装而成的复习会话，用于针对特定错误模式。
+_避免_：Smart review、weakness drill。
 
-### Sharing & community
+### 分享与社区
 
-**Problem Set**:
-A named group of problems assembled for focused review, which can be shared with others.
-_Avoid_: Set, deck (when alone, ambiguous).
+**Problem Set（题集）**：
+一组为集中复习而组装并命名的题目集合，可与他人分享。
+_避免_：Set、deck（单独使用时均有歧义）。
 
-**Manual Set**:
-A problem set whose membership is chosen problem by problem.
+**Manual Set（手动题集）**：
+成员逐题手动挑选的题集。
 
-**Smart Set**:
-A problem set whose membership is auto-populated from saved filter criteria instead of being picked by hand.
-_Avoid_: Auto set, dynamic set.
+**Smart Set（智能题集）**：
+成员根据已保存的筛选条件自动填充、而非手动挑选的题集。
+_避免_：Auto set、dynamic set。
 
-**Filter Criteria**:
-A reusable spec (tags, statuses, problem types, review-date window) that powers faceted search, Smart Sets, and Smart Set membership.
-_Avoid_: Smart filter, query (alone).
+**Filter Criteria（筛选条件）**：
+一种可复用的规范（标签、状态、题目类型、复习日期范围），用于驱动分面搜索、智能题集及智能题集的成员资格。
+_避免_：Smart filter、query（单独使用）。
 
-**Sharing Level**:
-How a problem set is exposed — Private, Limited (shared with specific people by email), or Public (anyone with the link).
-_Avoid_: Visibility (reserved for the listed/unlisted toggle).
+**Sharing Level（分享级别）**：
+题集的公开方式——Private（私密）、Limited（按邮箱与特定人员分享）或 Public（任何有链接者可见）。
+_避免_：Visibility（保留给已上架/未上架切换开关）。
 
-**Listed**:
-The state of a public set being opted into Discovery with a subject category. A public set can be unlisted (direct link only) and a listed set is always public.
-_Avoid_: Published, discoverable.
+**Listed（已上架）**：
+公开题集选择进入 Discovery（发现）并附带科目分类的状态。公开题集可以是未上架的（仅直接链接可见），而已上架的题集一定是公开的。
+_避免_：Published、discoverable。
 
-**Discovery**:
-The public browsing surface where students search, filter, and rank listed sets from other students.
-_Avoid_: Explore, gallery.
+**Discovery（发现）**：
+学生搜索、过滤和排序其他学生上架题集的公开浏览界面。
+_避免_：Explore、gallery。
 
-**Creator**:
-A student who lists public sets and therefore has a public profile page with their engagement stats and listed sets.
+**Creator（创作者）**：
+上架公开题集的学生，因此拥有带其互动统计与已上架题集的公开主页。
 
-**Engagement**:
-The public social signals on a listed set — views (bounce-filtered), likes, favourites, copies, and reports. Favourites are the student's own saves; likes are public appreciation.
-_Avoid_: Metrics, stats (when referring to the per-set signals).
+**Engagement（互动）**：
+已上架题集上的公开社交信号——浏览量（已过滤跳出）、点赞、收藏、复制和举报。收藏是学生自己的保存；点赞是公开的赞赏。
+_避免_：Metrics、stats（当指代每个题集的信号时）。
 
-### AI assistance
+### AI 辅助
 
-**AI Extraction**:
-Turning a photo of a problem into a structured problem draft — detecting its type, choices, and likely answer — that the student reviews before saving.
-_Avoid_: OCR, scanning (extraction includes structure, not just text).
+**AI Extraction（AI 提取）**：
+将题目照片转换为结构化的题目草稿——识别其类型、选项和可能的答案——由学生在保存前审阅。
+_避免_：OCR、scanning（提取包含结构，而不只是文本）。
 
-**Insight Digest**:
-An AI-generated periodic report of the student's error patterns, weak spots, and topic clusters, produced from their attempts and error causes.
-_Avoid_: Insights (plural alone), report (generic).
+**Insight Digest（洞察摘要）**：
+根据学生的作答记录与错误原因，由 AI 周期性生成的错误模式、薄弱点与知识点聚类报告。
+_避免_：Insights（单独复数）、report（泛指）。
 
-### Transfer
+### 传输
 
-**QR Transfer**:
-Handing a problem photo from the student's phone to their desktop by scanning a QR code into a short-lived session, from which the image can be saved or extracted.
-_Avoid_: Upload link, phone sync.
+**QR Transfer（二维码传输）**：
+通过扫描二维码将题目照片从学生手机传入短时会话，进而传到桌面，图片可在该会话中保存或提取。
+_避免_：Upload link、phone sync。

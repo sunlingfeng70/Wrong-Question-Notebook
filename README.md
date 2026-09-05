@@ -4,116 +4,112 @@
 
 <h1 align="center">Wrong Question Notebook</h1>
 
-<p align="center">
-  <a href="README.md">English</a> | <a href="README.zh-CN.md">简体中文</a>
-</p>
+Wrong Question Notebook（WQN）是一个 Web 应用，旨在帮助学生系统性地追踪、整理和复习自己做错的题目。它能够帮助学生在多个笔记本中管理题目、通过详细统计跟踪学习进度、在结构化的复习会话中提升复习效率。
 
-The Wrong Question Notebook (WQN) is a web application designed to help students systematically track, organise, and revise the problems they answered incorrectly. It provides a comprehensive system for managing problems across multiple notebooks, tracking progress with detailed statistics, and facilitating effective revision through structured review sessions.
+**在线体验：** [wqn.magicworks.app](https://wqn.magicworks.app/)
 
-**Live:** [wqn.magicworks.app](https://wqn.magicworks.app/)
+## 功能特性
 
-## Features
+### 错题整理
 
-### Notebook & Problem Management
+- 创建带有自定义颜色和图标标识的笔记本来组织题目
+- **支持三种题目类型**：选择题、简答题、问答题
+- **富文本编辑器**（TipTap），支持 LaTeX 数学公式、表格、列表、图片等
+- **更好的答案展示方法**：选择题提供选择按钮、简答题支持多个答案
+- **自动判分**：对支持的题目类型进行自动答案验证
+- **状态跟踪**：可将题目标记为“错误”、“需要复习”或“已掌握”
+- **文件附件**：可上传图片 以及 PDF 作为题目或解析附件
+- 支持排序、筛选，并带有分面搜索功能
 
-- Create colour-coded notebooks (formerly "subjects") with custom icons to organise problems
-- **Three problem types**: Multiple Choice (MCQ), Short Answer, and Extended Response
-- **Rich text editor** (TipTap) with formatting, LaTeX math equations, tables, lists, images, and more
-- **Enhanced answer config**: MCQ radio-button picker, multi-answer short text, numeric answers with tolerance
-- **Auto-marking**: Automatic answer validation for supported problem types
-- **Status tracking**: Mark problems as Wrong, Needs Review, or Mastered
-- **File attachments**: Upload images and PDFs as problem assets or solution assets
-- Sortable and filterable problem tables with faceted search
+### 标签系统
 
-### Tag System
+- 在笔记本中创建和管理标签
+- 为题目添加多个标签，实现灵活分类
+- 支持按标签筛选题目
+- 支持跨所有笔记本的全局标签总览
 
-- Create and manage tags within notebooks
-- Tag problems with multiple tags for flexible categorisation
-- Filter problems by tags
-- Per-notebook tag management (create, rename, delete)
+### 错题题集&复习
 
-### Problem Sets & Review Sessions
+- 创建手动题集或 **Smart Sets**（通过保存的筛选配置自动填充）
+- **共享级别**：私有、受限共享（通过邮箱与指定用户共享）或公开
+- **基于会话的复习**：开始、暂停和继续复习会话
+- 每道题都可单独提交答案，并支持自动判分或自我评估
+- **会话总结**：复习结束后的统计与结果拆分
+- 作答后可查看题目解析
 
-- Create manual or **Smart Sets** (auto-populated via saved filter configs)
-- **Sharing levels**: Private, Limited (share with specific users via email), or Public
-- **Session-based review**: Start, pause, and resume review sessions
-- Per-problem answer submission with auto-marking or self-assessment
-- **Session summary**: Post-review statistics and breakdown
-- Solution reveal after attempting problems
+### 发现与社交
 
-### Discovery & Social
+- **公开发现页**（`/discover`）：基于 PostgreSQL 全文检索（tsvector + GIN）、科目分类筛选、`pg_cron` 定期刷新的质量排序算法，以及基于游标的无限滚动
+- **社交互动**：浏览量追踪（过滤弹跳）、点赞、收藏、复制计数，以及用于内容审核的举报机制
+- **创作者主页**（`/creators/[username]`）：展示头像、简介、汇总互动数据，以及该用户公开列出的题目集网格
+- **列出 / 不列出开关**：配合科目分类选择器，让你在题目集准备好后再加入发现页
+- **收藏标签页**：在题目集页面快速访问你收藏过的题集
+- **基于用户名的身份**：用户名根据邮箱自动生成，可在个人资料中修改
+- **SEO**：动态 `app/sitemap.ts` 收录公开列出的题集和创作者主页，公开题集页附带 OpenGraph、Twitter Card 与 JSON-LD 结构化元数据
 
-- **Public Discovery page** (`/discover`) with PostgreSQL full-text search (tsvector + GIN), subject category filters, quality-biased ranking refreshed by `pg_cron`, and cursor-based infinite scroll
-- **Social engagement** on public problem sets: bounce-filtered view tracking, likes, favourites, copy counts, and a report / flag mechanism for moderation
-- **Creator profiles** at `/creators/[username]` with avatar, bio, aggregate engagement stats, and a grid of listed sets
-- **Listed / unlisted toggle** with a subject category picker — opt into Discovery only when a set is ready to share
-- **Favourites tab** on the problem sets page for quick access to saved sets
-- **Username-based identity**: usernames are auto-generated from email and editable from the profile sheet
-- **SEO**: dynamic `app/sitemap.ts` covering listed public sets and creator profiles, plus OpenGraph, Twitter Card, and JSON-LD metadata on public set pages
+### 统计仪表板
 
-### Statistics Dashboard
+- 类似 GitHub 的 **活跃度热力图**
+- **状态环形图**：错误 / 需要复习 / 已掌握 的分布
+- **进度折线图**：随时间变化的累计掌握情况
+- **科目柱状图与雷达图**：按笔记本进行对比
+- 重点统计卡片（连续学习天数、总数、会话统计）
+- 最近活动动态流
 
-- GitHub-style **activity heatmap**
-- **Status doughnut chart**: Wrong / Needs Review / Mastered breakdown
-- **Progress line chart**: Cumulative mastery over time
-- **Subject bar & radar charts**: Per-notebook comparisons
-- Hero stat cards (streaks, totals, session stats)
-- Recent activity feed
+### 使用AI提取题目
 
-### AI Problem Extraction
+- 使用 **豆包（火山方舟）视觉 LLM** 从图片中提取题目
+- 具有每日使用配额，并支持管理员为用户单独调整额度
+- 支持自动识别题目类型、选项和正确答案
 
-- Extract problems from images using **Doubao (Volcengine Ark) vision LLM**
-- Daily usage quota with per-user admin overrides
-- Supports auto-detection of problem type, choices, and correct answers
+### 用户资料
 
-### User Profile
+- 可自定义个人资料（头像、用户名、简介、人口统计信息）
 
-- Customisable profile (avatar, username, bio, demographics)
+### 身份验证与安全
 
-### Authentication & Security
+- 基于邮箱的注册与登录
+- 带邮箱确认的密码重置流程
+- 安全响应头（HSTS、CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、Permissions-Policy）
+- HTML 内容清洗（DOMPurify + sanitize-html），并支持数学内容
+- 对敏感接口进行速率限制
+- 使用 Zod schema 进行请求校验
 
-- Email-based signup and login
-- Password reset flow with email confirmation
-- Security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)
-- HTML sanitisation (DOMPurify + sanitize-html) with math content support
-- Rate limiting on sensitive endpoints
-- Request validation with Zod schemas
+### 隐私
 
-### Privacy & Compliance
+- **符合 GDPR 标准的 Cookie 隐私偏好设置**，支持精细的偏好设置
+- 隐私政策页
 
-- **GDPR-compliant cookie consent** banner with granular preferences
-- Privacy Policy page
+## 技术栈
 
-## Tech Stack
+| 层级         | 技术                                     |
+| ------------ | ---------------------------------------- |
+| 框架         | Next.js 16（App Router、Turbopack）      |
+| 语言         | TypeScript（严格模式）                   |
+| 样式         | Tailwind CSS 3、tailwindcss-animate      |
+| 组件         | shadcn/ui（Radix UI + CVA）              |
+| 富文本       | TipTap（数学、表格、图片、链接、排版）   |
+| 数学渲染     | KaTeX                                    |
+| 认证与数据库 | Supabase（PostgreSQL、Auth、Storage）    |
+| AI           | 豆包 Seed（火山方舟，OpenAI 兼容）        |
+| 图表         | Chart.js + react-chartjs-2               |
+| 数据表格     | TanStack Table                           |
+| 校验         | Zod                                      |
+| 主题         | next-themes（class 策略）                |
+| 分析         | Vercel Analytics + Speed Insights        |
+| 部署         | Vercel                                   |
+| 测试         | Vitest + @vitest/coverage-v8             |
+| 代码质量     | ESLint、Prettier                         |
 
-| Layer          | Technology                                       |
-| -------------- | ------------------------------------------------ |
-| Framework      | Next.js 16 (App Router, Turbopack)               |
-| Language       | TypeScript (strict)                              |
-| Styling        | Tailwind CSS 3, tailwindcss-animate              |
-| Components     | shadcn/ui (Radix UI + CVA)                       |
-| Rich text      | TipTap (math, tables, images, links, typography) |
-| Math rendering | KaTeX                                            |
-| Auth & DB      | Supabase (PostgreSQL, Auth, Storage)             |
-| AI             | Doubao Seed (Volcengine Ark, OpenAI-compatible)   |
-| Charts         | Chart.js + react-chartjs-2                       |
-| Data tables    | TanStack Table                                   |
-| Validation     | Zod                                              |
-| Theme          | next-themes (class strategy)                     |
-| Analytics      | Vercel Analytics + Speed Insights                |
-| Deployment     | Vercel                                           |
-| Testing        | Vitest + @vitest/coverage-v8                     |
-| Code quality   | ESLint, Prettier                                 |
+## 快速开始
 
-## Getting Started
-
-### Prerequisites
+### 环境要求
 
 - Node.js 18+
-- A [Supabase](https://supabase.com) project
-- (Optional) A [Volcengine Ark API key](https://console.volcengine.com/ark/) for AI problem extraction
+- 一个 [Supabase](https://supabase.com) 项目
+- （可选）用于 AI 功能的 [火山方舟 API key](https://console.volcengine.com/ark/)
 
-### Installation
+### 安装
 
 ```bash
 git clone https://github.com/mrmagic2020/Wrong-Question-Notebook.git
@@ -121,97 +117,97 @@ cd Wrong-Question-Notebook/web
 npm install
 ```
 
-### Environment Variables
+### 环境变量
 
-Copy the example and fill in your values:
+复制示例文件并填写你的配置：
 
 ```bash
 cp env.example .env.local
 ```
 
-| Variable                                       | Description                               | Required |
-| ---------------------------------------------- | ----------------------------------------- | -------- |
-| `NEXT_PUBLIC_SUPABASE_URL`                     | Supabase project URL                      | Yes      |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Supabase anon / public key                | Yes      |
-| `SUPABASE_SERVICE_ROLE_KEY`                    | Supabase service role key (server-side)   | Yes      |
-| `SITE_URL`                                     | Deployed site URL (for sitemap)           | No       |
-| `VOLC_ARK_API_KEY`                             | Volcengine Ark API key (for AI features)  | No       |
-| `VOLC_ARK_BASE_URL` / `LLM_MODEL`          | Ark endpoint / model override (default Doubao) | No |
+| 变量                                           | 说明                                    | 必需 |
+| ---------------------------------------------- | --------------------------------------- | ---- |
+| `NEXT_PUBLIC_SUPABASE_URL`                     | Supabase 项目 URL                       | 是   |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Supabase anon / public key              | 是   |
+| `SUPABASE_SERVICE_ROLE_KEY`                    | Supabase service role key（服务端使用） | 是   |
+| `SITE_URL`                                     | 已部署站点的 URL（用于 sitemap）        | 否   |
+| `VOLC_ARK_API_KEY`                             | 火山方舟 API key（用于 AI 功能）       | 否   |
+| `VOLC_ARK_BASE_URL` / `LLM_MODEL`          | 方舟端点 / 模型覆盖（默认豆包）        | 否   |
 
-### Development
+### 开发
 
 ```bash
 npm run dev
 ```
 
-### Available Scripts
+### 常用命令
 
-Run from `web/`:
+请在 `web/` 目录下运行：
 
-| Command              | Purpose                                                          |
-| -------------------- | ---------------------------------------------------------------- |
-| `npm run dev`        | Start dev server (Turbopack)                                     |
-| `npm run build`      | Production build                                                 |
-| `npm run type-check` | TypeScript check (`tsc --noEmit`)                                |
-| `npm run lint`       | ESLint check                                                     |
-| `npm run test`       | Run tests (Vitest)                                               |
-| `npm run test:watch` | Run tests in watch mode                                          |
-| `npm run fix-all`    | Auto-fix lint + format                                           |
-| `npm run prepush`    | Full check: fix-all, type-check, lint, format-check, test, build |
+| 命令                 | 用途                                                           |
+| -------------------- | -------------------------------------------------------------- |
+| `npm run dev`        | 启动开发服务器（Turbopack）                                    |
+| `npm run build`      | 生产环境构建                                                   |
+| `npm run type-check` | TypeScript 检查（`tsc --noEmit`）                              |
+| `npm run lint`       | ESLint 检查                                                    |
+| `npm run test`       | 运行测试（Vitest）                                             |
+| `npm run test:watch` | 以监听模式运行测试                                             |
+| `npm run fix-all`    | 自动修复 lint 问题并格式化代码                                 |
+| `npm run prepush`    | 完整检查：fix-all、type-check、lint、format-check、test、build |
 
-Always run `npm run prepush` before committing.
+提交前请始终运行 `npm run prepush`。
 
-## Project Structure
+## 项目结构
 
 ```t
 web/
   app/
     [locale]/
-      (app)/          # Authenticated pages (notebooks, problems, problem-sets,
-                      #   discover, creators, statistics, insights, admin)
-      auth/           # Auth pages (login, sign-up, forgot-password, etc.)
-      privacy/        # Privacy Policy page
-      page.tsx        # Public landing page
-    api/              # API route handlers (incl. /discover, social endpoints)
-    sitemap.ts        # Dynamic sitemap (listed public sets + creator profiles)
-    layout.tsx        # Root layout (title.template for localised <title>)
-    globals.css       # Global styles, CSS utilities, animations
+      (app)/          # 需要登录的页面（笔记本、题目、题集、发现页、
+                      #   创作者主页、统计、洞察、管理后台）
+      auth/           # 认证页面（登录、注册、忘记密码等）
+      privacy/        # 隐私政策页面
+      page.tsx        # 公开主页
+    api/              # API 路由处理器（含 /discover 与社交相关接口）
+    sitemap.ts        # 动态 sitemap（公开列出的题集 + 创作者主页）
+    layout.tsx        # 根布局（title.template 用于本地化 <title>）
+    globals.css       # 全局样式、CSS 工具类、动画
   components/
-    ui/               # shadcn/ui primitives
-    landing/          # Landing page components
-    subjects/         # Notebook cards and dialogs
-    review/           # Review session components
-    statistics/       # Dashboard charts and cards
-    admin/            # Admin panel components
-    cookie-consent/   # GDPR consent banner and provider
+    ui/               # shadcn/ui 基础组件
+    landing/          # 落地页组件
+    subjects/         # 笔记本卡片与对话框
+    review/           # 复习会话组件
+    statistics/       # 仪表板图表与卡片
+    admin/            # 管理面板组件
+    cookie-consent/   # GDPR 同意横幅与 Provider
     discovery-card.tsx
     social-actions-bar.tsx
     report-dialog.tsx
-    ...               # Other feature components
-  lib/                # Utilities, Supabase clients, schemas, types, constants
-  messages/           # i18n message bundles (en, zh-CN)
-  public/             # Static assets (W_logo.svg, robots.txt)
-  proxy.ts            # Middleware: Supabase session refresh + i18n routing
+    ...               # 其他功能组件
+  lib/                # 工具函数、Supabase 客户端、schema、类型、常量
+  messages/           # 多语言文案包（en、zh-CN）
+  public/             # 静态资源（W_logo.svg、robots.txt）
+  proxy.ts            # 中间件：Supabase 会话刷新 + i18n 路由
 ```
 
-## Deployment
+## 部署
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for a detailed Vercel deployment guide.
+详细的 Vercel 部署指南请参见 [DEPLOYMENT.md](DEPLOYMENT.md)。
 
-## Documentation
+## 文档
 
-- [CHANGELOG.md](CHANGELOG.md) -- Version history
-- [DEPLOYMENT.md](DEPLOYMENT.md) -- Deployment guide
-- [Proposal.md](Proposal.md) -- Initial project proposal
+- [CHANGELOG.md](CHANGELOG.md) —— 版本历史
+- [DEPLOYMENT.md](DEPLOYMENT.md) —— 部署指南
+- [Proposal.md](Proposal.md) —— 初始项目提案
 
-## Contributing
+## 贡献
 
-This project uses ESLint, Prettier, and TypeScript for code quality. Please run the following before pushing:
+本项目使用 ESLint、Prettier 和 TypeScript 来保证代码质量。请在推送代码前运行以下命令：
 
 ```bash
 npm run prepush
 ```
 
-## License
+## 许可证
 
-This project is licensed under the GPL-3.0 license. See [LICENSE](LICENSE) for details.
+本项目基于 GPL-3.0 许可证发布。详情请参见 [LICENSE](LICENSE)。

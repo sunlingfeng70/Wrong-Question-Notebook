@@ -1,55 +1,55 @@
-# Deployment Guide for Wrong Question Notebook
+# Wrong Question Notebook 部署指南
 
-This guide will help you deploy the Wrong Question Notebook application to Vercel.
+本指南将帮助你把 Wrong Question Notebook 应用部署到 Vercel。
 
-## Prerequisites
+## 前置条件
 
-1. **Vercel Account**: Sign up at [vercel.com](https://vercel.com)
-2. **Supabase Project**: Set up a Supabase project at [supabase.com](https://supabase.com)
-3. **Git Repository**: Push your code to GitHub, GitLab, or Bitbucket
+1. **Vercel 账户**：在 [vercel.com](https://vercel.com) 注册
+2. **Supabase 项目**：在 [supabase.com](https://supabase.com) 创建一个 Supabase 项目
+3. **Git 仓库**：将代码推送到 GitHub、GitLab 或 Bitbucket
 
-## Pre-Deployment Checklist
+## 部署前检查清单
 
-✅ **Security Audit**: No vulnerabilities found in dependencies
-✅ **Build Test**: Application builds successfully
-✅ **TypeScript**: All type errors resolved
-✅ **Linting**: Code follows project standards
-✅ **Tests**: All Vitest test suites pass
-✅ **Configuration**: Production-ready Next.js config
+✅ **安全审计**：依赖中未发现漏洞
+✅ **构建测试**：应用构建成功
+✅ **TypeScript**：所有类型错误已解决
+✅ **Lint 检查**：代码符合项目规范
+✅ **测试**：所有 Vitest 测试套件通过
+✅ **配置**：生产就绪的 Next.js 配置
 
-Run `npm run prepush` from the `web/` directory to verify all checks pass before deploying.
+在部署前，从 `web/` 目录运行 `npm run prepush` 以验证所有检查通过。
 
-## Step 1: Set Up Supabase
+## 第 1 步：设置 Supabase
 
-1. **Create a new Supabase project**:
-    - Go to [supabase.com](https://supabase.com)
-    - Click "New Project"
-    - Choose your organization and create the project
+1. **创建一个新的 Supabase 项目**：
+    - 前往 [supabase.com](https://supabase.com)
+    - 点击「New Project」
+    - 选择你的组织并创建项目
 
-2. **Get your project credentials**:
-    - Go to Settings → API
-    - Copy your Project URL and anon/public key
+2. **获取项目凭据**：
+    - 前往 Settings → API
+    - 复制 Project URL 和 anon/public key
 
-3. **Set up your database schema** (if not already done):
-    - The application expects tables for subjects, problems, tags, attempts, problem sets, review sessions, profiles, user activity logs, admin settings, and usage quotas
-    - Refer to your database migration files or schema documentation
+3. **设置数据库结构**（若尚未完成）：
+    - 应用期望存在以下表：subjects、problems、tags、attempts、problem sets、review sessions、profiles、user activity logs、admin settings 和 usage quotas
+    - 参考你的数据库迁移文件或结构文档
 
-## Step 2: Deploy to Vercel
+## 第 2 步：部署到 Vercel
 
-### Option A: Deploy via Vercel Dashboard (Recommended)
+### 方案 A：通过 Vercel 控制台部署（推荐）
 
-1. **Connect your repository**:
-    - Go to [vercel.com/dashboard](https://vercel.com/dashboard)
-    - Click "New Project"
-    - Import your Git repository
+1. **连接你的仓库**：
+    - 前往 [vercel.com/dashboard](https://vercel.com/dashboard)
+    - 点击「New Project」
+    - 导入你的 Git 仓库
 
-2. **Configure the project**:
-    - **Framework Preset**: Next.js
-    - **Root Directory**: `web` (if your Next.js app is in the web folder)
-    - **Build Command**: `npm run build`
-    - **Output Directory**: `.next` (default)
+2. **配置项目**：
+    - **框架预设**：Next.js
+    - **根目录**：`web`（若你的 Next.js 应用位于 web 文件夹）
+    - **构建命令**：`npm run build`
+    - **输出目录**：`.next`（默认）
 
-3. **Set environment variables** (see [Environment Variables Reference](#environment-variables-reference) for the full list):
+3. **设置环境变量**（完整列表参见[环境变量参考](#environment-variables-reference)）：
 
     ```env
     NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
@@ -58,37 +58,37 @@ Run `npm run prepush` from the `web/` directory to verify all checks pass before
     GEMINI_API_KEY=your_gemini_api_key
     ```
 
-4. **Deploy**:
-    - Click "Deploy"
-    - Wait for the build to complete
+4. **部署**：
+    - 点击「Deploy」
+    - 等待构建完成
 
-### Option B: Deploy via Vercel CLI
+### 方案 B：通过 Vercel CLI 部署
 
-1. **Install Vercel CLI**:
+1. **安装 Vercel CLI**：
 
     ```bash
     npm i -g vercel
     ```
 
-2. **Login to Vercel**:
+2. **登录 Vercel**：
 
     ```bash
     vercel login
     ```
 
-3. **Navigate to your project**:
+3. **进入你的项目目录**：
 
     ```bash
     cd web
     ```
 
-4. **Deploy**:
+4. **部署**：
 
     ```bash
     vercel
     ```
 
-5. **Set environment variables**:
+5. **设置环境变量**：
 
     ```bash
     vercel env add NEXT_PUBLIC_SUPABASE_URL
@@ -97,121 +97,121 @@ Run `npm run prepush` from the `web/` directory to verify all checks pass before
     vercel env add GEMINI_API_KEY
     ```
 
-6. **Redeploy with environment variables**:
+6. **携带环境变量重新部署**：
 
     ```bash
     vercel --prod
     ```
 
-## Step 3: Configure Domain (Optional)
+## 第 3 步：配置域名（可选）
 
-1. **Add custom domain**:
-    - Go to your project dashboard on Vercel
-    - Navigate to Settings → Domains
-    - Add your custom domain
-    - Follow the DNS configuration instructions
+1. **添加自定义域名**：
+    - 前往 Vercel 上的项目控制台
+    - 进入 Settings → Domains
+    - 添加自定义域名
+    - 按照 DNS 配置说明操作
 
-2. **Update environment variables**:
-    - Update `SITE_URL` in your environment variables to match your domain
+2. **更新环境变量**：
+    - 将环境变量中的 `SITE_URL` 更新为你的域名
 
-## Step 4: Post-Deployment Verification
+## 第 4 步：部署后验证
 
-1. **Test the application**:
-    - Visit your deployed URL
-    - Test user registration and login (Turnstile CAPTCHA should appear)
-    - Create a notebook and add problems
-    - Verify file uploads work correctly
-    - Test problem review sessions and auto-marking
-    - Check that the statistics dashboard loads
-    - Verify cookie consent banner appears on first visit
-    - (If admin) Confirm the admin panel is accessible
+1. **测试应用**：
+    - 访问你的部署 URL
+    - 测试用户注册与登录（应出现 Turnstile CAPTCHA）
+    - 创建笔记本并添加题目
+    - 验证文件上传是否正常工作
+    - 测试题目复习会话与自动判题
+    - 检查统计仪表板是否加载
+    - 验证首次访问时出现 Cookie 同意横幅
+    - （若为管理员）确认管理面板可访问
 
-2. **Check logs**:
-    - Monitor Vercel function logs for any errors
-    - Check Supabase logs for database issues
+2. **检查日志**：
+    - 监控 Vercel 函数日志以排查错误
+    - 检查 Supabase 日志以排查数据库问题
 
-3. **Performance check**:
-    - Run Lighthouse audit
-    - Check Core Web Vitals
+3. **性能检查**：
+    - 运行 Lighthouse 审计
+    - 检查 Core Web Vitals
 
-## Environment Variables Reference
+## 环境变量参考
 
-| Variable                                       | Description                                       | Required |
-| ---------------------------------------------- | ------------------------------------------------- | -------- |
-| `NEXT_PUBLIC_SUPABASE_URL`                     | Supabase project URL                              | Yes      |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Supabase anon / public key                        | Yes      |
-| `SUPABASE_SERVICE_ROLE_KEY`                    | Supabase service role key (server-side admin)     | Yes      |
-| `SITE_URL`                                     | Deployed site URL (for sitemap generation)        | No       |
-| `GEMINI_API_KEY`                               | Google Gemini API key (for AI problem extraction) | No       |
+| 变量                                           | 描述                                             | 必填 |
+| ---------------------------------------------- | ------------------------------------------------ | ---- |
+| `NEXT_PUBLIC_SUPABASE_URL`                     | Supabase 项目 URL                                | 是   |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Supabase anon / public key                       | 是   |
+| `SUPABASE_SERVICE_ROLE_KEY`                    | Supabase service role key（服务端管理员）        | 是   |
+| `SITE_URL`                                     | 部署站点 URL（用于生成 sitemap）                 | 否   |
+| `GEMINI_API_KEY`                               | Google Gemini API 密钥（用于 AI 题目提取）       | 否   |
 
-## Security Considerations
+## 安全考量
 
-✅ **Headers**: Security headers configured in `next.config.ts` (HSTS, CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)
-✅ **CAPTCHA**: Cloudflare Turnstile on login and registration forms
-✅ **HTML Sanitisation**: DOMPurify + sanitize-html with math content support
-✅ **Rate Limiting**: Applied to sensitive API endpoints
-✅ **Input Validation**: Zod schemas validate all API request bodies
-✅ **CORS**: Properly configured for Supabase
-✅ **Authentication**: Supabase Auth with middleware session refresh on every request
-✅ **Authorisation**: Role-based access control (user, moderator, admin, super_admin)
-✅ **File Uploads**: Secure file handling with Supabase Storage and user-scoped access
-✅ **Cookie Consent**: GDPR-compliant consent banner; analytics loaded only after user opt-in
+✅ **安全响应头**：已在 `next.config.ts` 中配置安全响应头（HSTS、CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、Permissions-Policy）
+✅ **CAPTCHA**：登录和注册表单使用 Cloudflare Turnstile
+✅ **HTML 消毒**：DOMPurify + sanitize-html，支持数学内容
+✅ **限流**：应用于敏感 API 端点
+✅ **输入校验**：Zod 结构校验所有 API 请求体
+✅ **CORS**：为 Supabase 正确配置
+✅ **身份验证**：Supabase Auth，每次请求均通过中间件刷新会话
+✅ **授权**：基于角色的访问控制（user、moderator、admin、super_admin）
+✅ **文件上传**：使用 Supabase Storage 与用户作用域访问的安全文件处理
+✅ **Cookie 同意**：符合 GDPR 的同意横幅；分析仅在用户选择同意后加载
 
-## Troubleshooting
+## 故障排查
 
-### Common Issues
+### 常见问题
 
-1. **Build Failures**:
-    - Check that all environment variables are set
-    - Ensure TypeScript compilation passes locally
-    - Verify all dependencies are installed
+1. **构建失败**：
+    - 检查所有环境变量是否已设置
+    - 确保 TypeScript 编译在本机通过
+    - 确认所有依赖已安装
 
-2. **Authentication Issues**:
-    - Verify Supabase URL and keys are correct
-    - Check Supabase project is active
-    - Ensure RLS policies are properly configured
+2. **身份验证问题**：
+    - 验证 Supabase URL 与密钥是否正确
+    - 检查 Supabase 项目是否处于活动状态
+    - 确保 RLS 策略配置正确
 
-3. **File Upload Issues**:
-    - Verify Supabase Storage is enabled
-    - Check storage bucket permissions
-    - Ensure file size limits are appropriate
+3. **文件上传问题**：
+    - 验证 Supabase Storage 是否已启用
+    - 检查存储桶权限
+    - 确保文件大小限制合适
 
-4. **Database Connection Issues**:
-    - Verify database is accessible
-    - Check connection pooling settings
-    - Review Supabase project status
+4. **数据库连接问题**：
+    - 验证数据库是否可访问
+    - 检查连接池设置
+    - 查看 Supabase 项目状态
 
-### Getting Help
+### 获取帮助
 
-- Check Vercel deployment logs
-- Review Supabase project logs
-- Test locally with production environment variables
-- Consult Next.js and Supabase documentation
+- 查看 Vercel 部署日志
+- 查看 Supabase 项目日志
+- 使用生产环境变量在本地测试
+- 查阅 Next.js 与 Supabase 文档
 
-## Monitoring and Maintenance
+## 监控与维护
 
-1. **Set up monitoring**:
-    - Vercel Analytics and Speed Insights are integrated (loaded conditionally after cookie consent)
-    - Set up error tracking (Sentry, etc.) if desired
-    - Monitor Supabase usage and limits
-    - Check the admin panel's statistics dashboard for platform-wide metrics
+1. **设置监控**：
+    - 已集成 Vercel Analytics 与 Speed Insights（在 Cookie 同意后按条件加载）
+    - 如需要，可设置错误追踪（Sentry 等）
+    - 监控 Supabase 用量与限额
+    - 检查管理面板的统计仪表板以查看平台级指标
 
-2. **Regular maintenance**:
-    - Keep dependencies updated
-    - Monitor security advisories
-    - Review and rotate API keys periodically
+2. **定期维护**：
+    - 保持依赖更新
+    - 监控安全公告
+    - 定期审查并轮换 API 密钥
 
-## Production Optimizations
+## 生产优化
 
-The application includes several production optimizations:
+应用包含多项生产优化：
 
-- **Image Optimization**: Next.js Image component with WebP/AVIF support
-- **Bundle Optimization**: Package imports optimized for lucide-react
-- **Security Headers**: HSTS, X-Frame-Options, X-Content-Type-Options, CSP, Referrer-Policy, Permissions-Policy
-- **SEO**: Automatic sitemap and robots.txt generation via `next-sitemap` (runs on `postbuild`)
-- **Conditional Analytics**: Vercel Analytics and Speed Insights loaded only after cookie consent
-- **Turbopack**: Used in development for faster rebuilds (Next.js 16)
+- **图片优化**：Next.js Image 组件，支持 WebP/AVIF
+- **打包优化**：针对 lucide-react 优化的包导入
+- **安全响应头**：HSTS、X-Frame-Options、X-Content-Type-Options、CSP、Referrer-Policy、Permissions-Policy
+- **SEO**：通过 `next-sitemap`（在 `postbuild` 时运行）自动生成 sitemap 与 robots.txt
+- **条件式分析**：Vercel Analytics 与 Speed Insights 仅在 Cookie 同意后加载
+- **Turbopack**：开发环境用于加速重新构建（Next.js 16）
 
-## Support
+## 支持
 
-For issues specific to this application, check the project's GitHub repository or contact the development team.
+针对本应用的具体问题，请查看项目的 GitHub 仓库或联系开发团队。
