@@ -151,3 +151,6 @@ vite.config.ts.timestamp-*
 
 # Mac System files
 .DS_Store
+
+# Solomd editor session files
+.solomd/
